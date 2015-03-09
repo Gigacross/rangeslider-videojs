@@ -949,6 +949,24 @@ videojs.TimePanelLeft.prototype.createEl = function(){
 	});
 };
 
+videojs.TimePanelLeft.prototype.onMouseDown = function(event) {
+	event.preventDefault();
+	videojs.blockTextSelection();
+	if(!this.rs.options.locked) {
+		this.pressed = true;
+		videojs.on(document, "mouseup", videojs.bind(this,this.onMouseUp));
+		videojs.addClass(this.el_, 'active');
+	}
+};
+
+videojs.TimePanelLeft.prototype.onMouseUp = function(event) {
+	videojs.off(document, "mouseup", this.onMouseUp, false);
+	videojs.removeClass(this.el_, 'active');
+	if(!this.rs.options.locked) {
+		this.pressed = false;
+	}
+};
+
 
 /**
  * This is the right time panel 
