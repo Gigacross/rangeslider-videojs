@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-- APACHE
+
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -561,7 +561,7 @@ videojs.SeekRSBar.prototype.onMouseMove = function(event) {
 		
 	//Fix a problem with the presition in the display time
 	var currentTimeDisplay = this.player_.controlBar.currentTimeDisplay.el_;
-	currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>'+vjs.formatTime(this.rs._seconds(left), this.player_.duration());
+	currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>'+videojs.formatTime(this.rs._seconds(left), this.player_.duration());
 	
 	// Trigger slider change
 	if (this.rs.left.pressed||this.rs.right.pressed) {
