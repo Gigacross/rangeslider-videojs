@@ -313,7 +313,7 @@ var $ = require('jquery');
         },
         _getArrowValue: function(index) {
             var index = index || 0;
-            var duration = this.player.duration();
+            var duration = this._duration();
 
             duration = typeof duration == 'undefined' ? 0 : duration;
 
@@ -324,22 +324,21 @@ var $ = require('jquery');
             return videojs.round(this._seconds(percentage / 100), this.updatePrecision - 1);
         },
         _percent: function(seconds) {
-            var duration = this.player.duration();
-            console.log('duration is ' + this.player.duration());
+            var duration = this._duration();
             if (isNaN(duration)) {
                 return 0;
             }
             return Math.min(1, Math.max(0, seconds / duration));
         },
         _seconds: function(percent) {
-            var duration = this.player.duration();
+            var duration = this._duration();
             if (isNaN(duration) || duration === 0) {
                 return 0;
             }
             return Math.min(duration, Math.max(0, percent * duration));
         },
         _reset: function() {
-            var duration = this.player.duration();
+            var duration = this._duration();
             this.tpl.el_.style.left = '0%';
             this.tpr.el_.style.left = '100%';
             this._setValuesLocked(0, duration);
@@ -388,7 +387,7 @@ var $ = require('jquery');
                 return false;
             }
 
-            var duration = this.player.duration() || 0,
+            var duration = this._duration() || 0,
                 durationSel;
 
             var intRegex = /^\d+$/; //check if the objNew is an integer
@@ -433,6 +432,13 @@ var $ = require('jquery');
             
             $('.vjs-selectionbar-left-RS .vjs-time-text').html( $('.vjs-timepanel-left-RS .vjs-time-text').html() );
             $('.vjs-selectionbar-right-RS .vjs-time-text').html( $('.vjs-timepanel-right-RS .vjs-time-text').html() );
+        },
+        _duration: function() {
+            if (!isNaN(this.options.duration)) {
+                return this.options.duration;
+            }
+            
+            return this.player.duration();
         }
     };
 
