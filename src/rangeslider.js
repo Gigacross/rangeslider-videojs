@@ -117,8 +117,6 @@ var $ = require('jquery');
     }
     videojs.plugin('rangeslider', RangeSlider_);
 
-
-
     //-- Plugin
 
     function RangeSlider(player, options) {
@@ -239,6 +237,7 @@ var $ = require('jquery');
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
 
             var percent = this._percent(seconds);
+            console.log ('seconds ' + seconds + ' to percentage - ' + percent);
             var isValidIndex = (index === 0 || index === 1);
             var isChangeable = !this.locked;
             if (isChangeable && isValidIndex)
@@ -326,6 +325,7 @@ var $ = require('jquery');
         },
         _percent: function(seconds) {
             var duration = this.player.duration();
+            console.log('duration is ' + this.player.duration());
             if (isNaN(duration)) {
                 return 0;
             }
@@ -333,7 +333,7 @@ var $ = require('jquery');
         },
         _seconds: function(percent) {
             var duration = this.player.duration();
-            if (isNaN(duration)) {
+            if (isNaN(duration) || duration === 0) {
                 return 0;
             }
             return Math.min(duration, Math.max(0, percent * duration));
@@ -1263,8 +1263,6 @@ var $ = require('jquery');
     videojs.ControlTimePanelLeft.prototype.onKeyUp = function(event) {
         this.rs._checkControlTime(0, this.el_.children, this.timeOld);
     };
-
-
 
     /**
      * This is the control right time panel
