@@ -19,8 +19,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+var $ = require('jquery');
+
 //----------------Load Plugin----------------//
 (function() {
+    
     //-- Load RangeSlider plugin in videojs
     function RangeSlider_(options) {
         var player = this;
@@ -345,7 +348,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             var triggerSliderChange = typeof writeControlTime != 'undefined';
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
             if (this.options.locked) {
-                this.unlock(); //It is unlocked to change the bar position. In the end it will return the value.
+                    this.unlock(); //It is unlocked to change the bar position. In the end it will return the value.
                 this.setValue(0, start, writeControlTime);
                 this.setValue(1, end, writeControlTime);
                 this.lock();
@@ -428,8 +431,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             this.player.trigger("sliderchange");
             // TODO re-implement without jquery
             
-            // $('.vjs-selectionbar-left-RS .vjs-time-text').html( $('.vjs-timepanel-left-RS .vjs-time-text').html() );
-            // $('.vjs-selectionbar-right-RS .vjs-time-text').html( $('.vjs-timepanel-right-RS .vjs-time-text').html() );
+            $('.vjs-selectionbar-left-RS .vjs-time-text').html( $('.vjs-timepanel-left-RS .vjs-time-text').html() );
+            $('.vjs-selectionbar-right-RS .vjs-time-text').html( $('.vjs-timepanel-right-RS .vjs-time-text').html() );
         }
     };
 
@@ -737,15 +740,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             
             //Fix for BUG #120. Realign margin-left for left tab
             //TODO - put this back without jquery
-            // if (index === 0) {
-            // 	if (TimeText.length <= 4) {
-            // 		$('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left", "-3.4em" );
-            // 	} else if (TimeText.length <= 5) {
-            // 		$('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left", "-3.95em" );
-            // 	} else {
-            // 		$('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left" , "-4.75em" );
-            // 	}
-            // }
+            if (index === 0) {
+            	if (TimeText.length <= 4) {
+            		$('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left", "-3.4em" );
+            	} else if (TimeText.length <= 5) {
+            		$('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left", "-3.95em" );
+            	} else {
+            		$('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left" , "-4.75em" );
+            	}
+            }
 
             if (index === 0) {
                 tpl.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
@@ -981,7 +984,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     videojs.SelectionBarLeft.prototype.createEl = function() {
         return videojs.Component.prototype.createEl.call(this, 'div', {
             className: 'vjs-rangeslider-handle vjs-selectionbar-left-RS',
-            innerHTML: '<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">00:00</span></div>'
+            innerHTML: '<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>'
         });
     };
 
@@ -1055,7 +1058,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     videojs.SelectionBarRight.prototype.createEl = function() {
         return videojs.Component.prototype.createEl.call(this, 'div', {
             className: 'vjs-rangeslider-handle vjs-selectionbar-right-RS',
-            innerHTML: '<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">00:00</span></div>'
+            innerHTML: '<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>'
         });
     };
 
