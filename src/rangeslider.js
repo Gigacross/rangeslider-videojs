@@ -54,13 +54,22 @@ var $ = require('jquery');
 
         videoWrapper.find('.vjs-progress-holder').append(timeBar.elEx().append(holder));       
 
-        //timeBar.init(player, options);653W
-        var controlTimePanel = new videojs.ControlTimePanel(player, options);
-
         player.controlBar.progressControl.seekBar.addChild(timeBar);
 
+        var controlTimePanel = new videojs.ControlTimePanel(player, options);
+
+        var controlTimePanelEl = $('<div class="vjs-controltimepanel-RS vjs-control"></div>');
+
+        var controlTimePanelLeft = $('<div class="vjs-controltimepanel-left-RS">Start: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
+        controlTimePanelEl.append(controlTimePanelLeft);
+
+        var controlTimePanelRight= $('<div class="vjs-controltimepanel-right-RS">End: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
+        controlTimePanelEl.append(controlTimePanelRight);
 
         player.controlBar.addChild(controlTimePanel);
+
+        videoWrapper.find('.vjs-control-bar').append(controlTimePanelEl);
+
         // videojs.SeekBar.prototype.options_.children.RSTimeBar = {}; //Range Slider Time Bar
         // videojs.ControlBar.prototype.options_.children.ControlTimePanel = {}; //Panel with the time of the range slider
 
