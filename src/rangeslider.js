@@ -27,13 +27,38 @@ var $ = require('jquery');
     //-- Load RangeSlider plugin in videojs
     function RangeSlider_(options) {
         var player = this;
-
+        var videoWrapper = $(this.el());
         var timeBar = new videojs.RSTimeBar(player, options);
-        //timeBar.init(player, options);
 
+        var holder = $('<div class="vjs-rangeslider-holder"></div>');
+        var selectionBar = $('<div class="vjs-selectionbar-RS"></div>');
+        var selectionBarLeft = $('<div class="vjs-rangeslider-handle vjs-selectionbar-left-RS"></div>')
+                                    .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
+
+        var selectionBarRight = $('<div class="vjs-rangeslider-handle vjs-selectionbar-right-RS"></div>')
+                                    .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
+
+        var timePanel = $('<div class="vjs-timepanel-RS"></div>');
+
+        var timePanelLeft = $('<div class="vjs-timepanel-left-RS"><span class="vjs-time-text">00:00</span></div>');
+        var timePanelRight = $('<div class=""><span class="vjs-time-text">00:00</span></div>');
+
+
+        timePanel.append(timePanelLeft);
+        timePanel.append(timePanelRight);
+
+        holder.append(selectionBar);
+        holder.append(selectionBarLeft);
+        holder.append(selectionBarRight);
+        holder.append(timePanel);
+
+        videoWrapper.find('.vjs-progress-holder').append(timeBar.elEx().append(holder));       
+
+        //timeBar.init(player, options);653W
         var controlTimePanel = new videojs.ControlTimePanel(player, options);
 
         player.controlBar.progressControl.seekBar.addChild(timeBar);
+
 
         player.controlBar.addChild(controlTimePanel);
         // videojs.SeekBar.prototype.options_.children.RSTimeBar = {}; //Range Slider Time Bar
@@ -603,6 +628,12 @@ var $ = require('jquery');
             innerHTML: ''
         });
     };
+
+    //$('<div class="vjs-timebar-RS">')
+
+    videojs.RSTimeBar.prototype.elEx = function() {
+        return $('<div class="vjs-timebar-RS">');
+    }
 
     /**
      * Seek Range Slider Bar and holder for the selection bars
