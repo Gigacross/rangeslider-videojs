@@ -2,7 +2,7 @@
   "name": "peepable-rangeslider-videojs",
   "version": "0.1.5",
   "description": "Peepable fork of Range Slider plugin for Video.js",
-  "main": "./src/rangeslider.js",
+  "main": "./dist/rangeslider.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,5 +29,10 @@
   "_from": "peepable-rangeslider-videojs@git+https://github.com/Peepable/rangeslider-videojs.git",
   "dependencies": {
     "jquery": "^2.1.3"
+  },
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2"
   }
 }
