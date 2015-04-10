@@ -4,24 +4,26 @@
          * @param {Object=} options
          * @constructor
          */
-        videojs.SeekRSBar = videojs.Component.extend({
-            /** @constructor */
-            init: function(player, options) {
-                videojs.Component.call(this, player, options);
-                this.on('mousedown', this.onMouseDown);
-                this.on('touchstart', this.onMouseDown);          
-                this.offsetX = 0;
-                this.offsetX2 = 0;
-                this.debug_handlel = 0;
-                this.debug_handler = 0;
-                this.debug_pause = false;
-                this.debug_pause_flag = false;
-                this.RightBarPosition = .9999;
-                this.LeftBarPosition = 0.00001;
+        videojs.SeekRSBar = function() {};
+
+        // videojs.Component.extend({
+        //     /** @constructor */
+        //     init: function(player, options) {
+        //         videojs.Component.call(this, player, options);
+        //         this.on('mousedown', this.onMouseDown);
+        //         this.on('touchstart', this.onMouseDown);          
+        //         this.offsetX = 0;
+        //         this.offsetX2 = 0;
+        //         this.debug_handlel = 0;
+        //         this.debug_handler = 0;
+        //         this.debug_pause = false;
+        //         this.debug_pause_flag = false;
+        //         this.RightBarPosition = .9999;
+        //         this.LeftBarPosition = 0.00001;
 
                 
-            }
-        });
+        //     }
+        // });
 
         // videojs.SeekRSBar.prototype.init_ = function(rangeslider) {
         //     this.rs = rangeslider;
@@ -54,7 +56,7 @@
             this.SelectionBarRight = selectionBarRight;
 
             var timePanel = new videojs.TimePanel(player, options);
-            this.addChild(timePanel);
+            //this.addChild(timePanel);
             this.TimePanel = timePanel;
 
             var selectionBar = $('<div class="vjs-selectionbar-RS"></div>');

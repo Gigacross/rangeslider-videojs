@@ -4,15 +4,17 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBar = videojs.Component.extend({
-        /** @constructor */
-        init: function(player, options) {
-            videojs.Component.call(this, player, options);
-            this.on('mouseup', this.onMouseUp);
-            this.fired = false;
-            this.suspend_fired = false;
-        }
-    });
+    videojs.SelectionBar = function() {};
+
+    //  videojs.Component.extend({
+    //     /** @constructor */
+    //     init: function(player, options) {
+    //         videojs.Component.call(this, player, options);
+    //         this.on('mouseup', this.onMouseUp);
+    //         this.fired = false;
+    //         this.suspend_fired = false;
+    //     }
+    // });
 
     videojs.SelectionBar.prototype.init_ = function(rangeslider) {
         this.rs = rangeslider;

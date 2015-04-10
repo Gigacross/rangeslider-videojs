@@ -1,35 +1,9 @@
     //-- Load RangeSlider plugin in videojs
     function RangeSlider_(options) {
         var player = this;
-        var videoWrapper = $(this.el());
 
-        var timeBar = new videojs.RSTimeBar(player, options);
 
-        videoWrapper.find('.vjs-progress-holder').append(timeBar.elEx(player, options));       
-
-        player.controlBar.progressControl.seekBar.addChild(timeBar);
-
-        var controlTimePanel = new videojs.ControlTimePanel(player, options);
-
-        var controlTimePanelEl = $('<div class="vjs-controltimepanel-RS vjs-control"></div>');
-
-        var controlTimePanelLeft = $('<div class="vjs-controltimepanel-left-RS">Start: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
-        controlTimePanelEl.append(controlTimePanelLeft);
-
-        var controlTimePanelRight= $('<div class="vjs-controltimepanel-right-RS">End: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
-        controlTimePanelEl.append(controlTimePanelRight);
-
-        player.controlBar.addChild(controlTimePanel);
-
-        videoWrapper.find('.vjs-control-bar').append(controlTimePanelEl);
-
-        // videojs.SeekBar.prototype.options_.children.RSTimeBar = {}; //Range Slider Time Bar
-        // videojs.ControlBar.prototype.options_.children.ControlTimePanel = {}; //Panel with the time of the range slider
-
-        player.rangeslider = new RangeSlider(player, options, {
-            RSTimeBar: timeBar,
-            ControlTimePanel: controlTimePanel
-        });
+        player.rangeslider = new RangeSlider(player, options);
         
         player.tabs_initialised = false;
         player.video_start_initialised = false;
@@ -99,19 +73,11 @@
                 if (plugin.options.locked)
                     plugin.lock(); //Lock the Range Slider
 
-                plugin.components.SelectionBarLeft.show();
-              plugin.components.SelectionBarRight.show();
-              plugin.show();
-              plugin.player.controlBar.show()
-              
-
+                plugin.showEx();
             } 
 
             //loadstart
             player.on('firstplay', initialVideoFinished);
-        // } else {
-        //     player.one('playing', initialVideoFinished);
-        // }
 
 
         console.log("Loaded Plugin RangeSlider");
@@ -120,12 +86,54 @@
 
     //-- Plugin
 
-    function RangeSlider(player, options, components) {
+    function RangeSlider(player, options) {
+        var videoWrapper = $(player.el());
+
+        var timeBar = new videojs.RSTimeBar(player, options);
+
+        videoWrapper.find('.vjs-progress-holder').append(timeBar.elEx(player, options));       
+
+        this.rstb = timeBar;
+
+        //components of the plugin
+        // var controlBar = player.controlBar;
+        // var seekBar = controlBar.progressControl.seekBar;
+        // this.components.RSTimeBar = seekBar.children()[3];
+        // this.components.ControlTimePanel = controlBar.children()[14]; // controlBar.ControlTimePanel;
+
+        //Save local component 
+        // this.rstb = this.components.RSTimeBar;
+        // this.box = this.components.SeekRSBar = this.rstb.children()[0];
+        // this.bar = this.components.SelectionBar = this.box.SelectionBar;
+        // this.left = this.components.SelectionBarLeft = this.box.SelectionBarLeft;
+        // this.right = this.components.SelectionBarRight = this.box.SelectionBarRight;
+        // this.tp = this.components.TimePanel = this.box.TimePanel;
+        // this.tpl = this.components.TimePanelLeft = this.tp.TimePanelLeft;
+        // this.tpr = this.components.TimePanelRight = this.tp.TimePanelRight;
+        // this.ctp = this.components.ControlTimePanel;
+        // this.ctpl = this.components.ControlTimePanelLeft = this.ctp.ControlTimePanelLeft;
+        // this.ctpr = this.components.ControlTimePanelRight = this.ctp.ControlTimePanelRight;
+
+        //player.controlBar.progressControl.seekBar.addChild(timeBar);
+
+        var controlTimePanel = new videojs.ControlTimePanel(player, options);
+        var controlTimePanelEl = $('<div class="vjs-controltimepanel-RS vjs-control"></div>');
+        var controlTimePanelLeft = $('<div class="vjs-controltimepanel-left-RS">Start: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
+        controlTimePanelEl.append(controlTimePanelLeft);
+        var controlTimePanelRight= $('<div class="vjs-controltimepanel-right-RS">End: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
+        controlTimePanelEl.append(controlTimePanelRight);
+
+        //player.controlBar.addChild(controlTimePanel);
+
+        this.ctp = controlTimePanel;
+
+        videoWrapper.find('.vjs-control-bar').append(controlTimePanelEl);
+
         var player = player || this;
 
         this.player = player;
 
-        this.components = components; // holds any custom components we add to the player
+        //this.components = components; // holds any custom components we add to the player
 
         options = options || {}; // plugin options
 
@@ -166,29 +174,11 @@
             this.start = 0;
             this.end = 0;
 
-            //components of the plugin
-            // var controlBar = player.controlBar;
-            // var seekBar = controlBar.progressControl.seekBar;
-            // this.components.RSTimeBar = seekBar.children()[3];
-            // this.components.ControlTimePanel = controlBar.children()[14]; // controlBar.ControlTimePanel;
-
-            //Save local component 
-            this.rstb = this.components.RSTimeBar;
-            this.box = this.components.SeekRSBar = this.rstb.children()[0];
-            this.bar = this.components.SelectionBar = this.box.SelectionBar;
-            this.left = this.components.SelectionBarLeft = this.box.SelectionBarLeft;
-            this.right = this.components.SelectionBarRight = this.box.SelectionBarRight;
-            this.tp = this.components.TimePanel = this.box.TimePanel;
-            this.tpl = this.components.TimePanelLeft = this.tp.TimePanelLeft;
-            this.tpr = this.components.TimePanelRight = this.tp.TimePanelRight;
-            this.ctp = this.components.ControlTimePanel;
-            this.ctpl = this.components.ControlTimePanelLeft = this.ctp.ControlTimePanelLeft;
-            this.ctpr = this.components.ControlTimePanelRight = this.ctp.ControlTimePanelRight;
 
         },
         lock: function() {
             this.options.locked = true;
-            this.ctp.enable(false);
+            //this.ctp.enable(false);
             if (typeof this.box != 'undefined')
                 videojs.addClass(this.box.el_, 'locked');
         },
@@ -205,6 +195,13 @@
                 if (this.options.controlTime)
                     this.showcontrolTime();
             }
+        },
+        showEx: function() {
+
+            this.rstb.SeekRSBar.SelectionBarLeft.show();
+            this.rstb.SeekRSBar.SelectionBarRight.show();
+            this.show();
+            this.player.controlBar.show();
         },
         hide: function() {
             this.options.hidden = true;

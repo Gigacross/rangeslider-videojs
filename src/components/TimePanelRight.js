@@ -4,12 +4,14 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.TimePanelRight = videojs.Component.extend({
-        /** @constructor */
-        init: function(player, options) {
-            videojs.Component.call(this, player, options);
-        }
-    });
+    videojs.TimePanelRight = function() {};
+
+    // videojs.Component.extend({
+    //     /** @constructor */
+    //     init: function(player, options) {
+    //         videojs.Component.call(this, player, options);
+    //     }
+    // });
 
     videojs.TimePanelRight.prototype.init_ = function(rangeslider) {
         this.rs = rangeslider;

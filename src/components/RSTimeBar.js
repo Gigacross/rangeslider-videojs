@@ -4,14 +4,13 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.RSTimeBar = videojs.Component.extend({
-        /** @constructor */
-        init: function(player, options) {
-            videojs.Component.call(this, player, options);
-            //have to do this due to bugs with options_ being renamed when minified.
-            this.addChild(new videojs.SeekRSBar(player, options));
-        }
-    });
+    videojs.RSTimeBar = function() {
+        this.SeekRSBar = new videojs.SeekRSBar();
+    };
+
+    videojs.RSTimeBar.prototype.show = function() {
+        //todo
+    };
 
     //this will not work with minified/uglified video.js
     videojs.RSTimeBar.prototype.init_ = function() {
@@ -32,10 +31,6 @@
         });
     };
 
-    //$('<div class="vjs-timebar-RS">')
-
     videojs.RSTimeBar.prototype.elEx = function(player, options) {
-        var holder = new videojs.SeekRSBar(player, options);
-
-        return $('<div class="vjs-timebar-RS">').append(holder.elEx());
+        return $('<div class="vjs-timebar-RS">').append(this.SeekRSBar.elEx());
     }

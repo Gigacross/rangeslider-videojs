@@ -4,22 +4,24 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.TimePanel = videojs.Component.extend({
-        /** @constructor */
-        init: function(player, options) {
-            var timePanelLeft, timePanelRight;
+    videojs.TimePanel = function() {};
 
-            videojs.Component.call(this, player, options);
+    // videojs.Component.extend({
+    //     /** @constructor */
+    //     init: function(player, options) {
+    //         var timePanelLeft, timePanelRight;
 
-            timePanelLeft = new videojs.TimePanelLeft(player, options);
-            this.addChild(timePanelLeft);
-            this.TimePanelLeft = timePanelLeft;
+    //         videojs.Component.call(this, player, options);
 
-            timePanelRight = new videojs.TimePanelRight(player, options);
-            this.addChild(timePanelRight);
-            this.TimePanelRight = timePanelRight;
-        }
-    });
+    //         timePanelLeft = new videojs.TimePanelLeft(player, options);
+    //         this.addChild(timePanelLeft);
+    //         this.TimePanelLeft = timePanelLeft;
+
+    //         timePanelRight = new videojs.TimePanelRight(player, options);
+    //         this.addChild(timePanelRight);
+    //         this.TimePanelRight = timePanelRight;
+    //     }
+    // });
 
     videojs.TimePanel.prototype.init_ = function(rangeslider) {
         this.rs = rangeslider;

@@ -4,15 +4,21 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBarLeft = videojs.Component.extend({
-        /** @constructor */
-        init: function(player, options) {
-            videojs.Component.call(this, player, options);
-            this.on('mousedown', this.onMouseDown);
-            this.on('touchstart', this.onMouseDown);
-            this.pressed = false;
-        }
-    });
+    videojs.SelectionBarLeft = function() {};
+
+    videojs.SelectionBarLeft.prototype.show = function() {
+      //todo
+    };
+
+    // videojs.Component.extend({
+    //     /** @constructor */
+    //     init: function(player, options) {
+    //         videojs.Component.call(this, player, options);
+    //         this.on('mousedown', this.onMouseDown);
+    //         this.on('touchstart', this.onMouseDown);
+    //         this.pressed = false;
+    //     }
+    // });
 
     videojs.SelectionBarLeft.prototype.init_ = function(rangeslider) {
         this.rs = rangeslider;
