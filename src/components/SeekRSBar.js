@@ -4,7 +4,11 @@
          * @param {Object=} options
          * @constructor
          */
-        videojs.SeekRSBar = function() {};
+        videojs.SeekRSBar = function(player, options) {
+            this.player = player;
+            this.options = options;
+            this.rs = player.rangeslider;
+        };
 
         // videojs.Component.extend({
         //     /** @constructor */
@@ -60,14 +64,10 @@
             this.TimePanel = timePanel;
 
             var selectionBar = $('<div class="vjs-selectionbar-RS"></div>');
-            var selectionBarLeft = $('<div class="vjs-rangeslider-handle vjs-selectionbar-left-RS"></div>')
-                                        .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
-
-            selectionBarLeft.on('click', function() { alert('blah - kenneth'); });
+            var selectionBarLeft = selectionBarLeft.elEx();
 
             var selectionBarRight = $('<div class="vjs-rangeslider-handle vjs-selectionbar-right-RS"></div>')
                                         .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
-
 
             var timePanel = $('<div class="vjs-timepanel-RS"></div>');
 
@@ -144,7 +144,7 @@
             var index = index || 0;
 
             // Position shouldn't change when handle is locked
-            if (this.rs.options.locked)
+            if (this.player.rangeslider.options.locked)
                 return false;
 
             // Check for invalid position

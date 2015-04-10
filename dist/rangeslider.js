@@ -210,9 +210,9 @@ var $ = require('jquery');
         },
         unlock: function() {
             this.options.locked = false;
-            this.ctp.enable();
-            if (typeof this.box != 'undefined')
-                videojs.removeClass(this.box.el_, 'locked');
+            //this.ctp.enable();
+            // if (typeof this.box != 'undefined')
+            //     videojs.removeClass(this.box.el_, 'locked');
         },
         show: function() {
             this.options.hidden = false;
@@ -264,14 +264,17 @@ var $ = require('jquery');
             console.log ('seconds ' + seconds + ' to percentage - ' + percent);
             var isValidIndex = (index === 0 || index === 1);
             var isChangeable = !this.locked;
-            if (isChangeable && isValidIndex)
-                this.box.setPosition(index, percent, writeControlTime);
+            if (isChangeable && isValidIndex) {
+                this.rstb.SeekRSBar.setPosition(index, percent, writeControlTime);
+            }
         },
         setValues: function(start, end, writeControlTime) {
+            console.log('setting values - ' + start);
             //index = 0 for the left Arrow and 1 for the right Arrow. Value in seconds
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
-             this._reset();
-
+            console.log('reset');
+            //this._reset();
+            console.log('_setValuesLocked');
             this._setValuesLocked(start, end, writeControlTime);
         },
         getValues: function() { //get values in seconds
@@ -363,15 +366,15 @@ var $ = require('jquery');
         },
         _reset: function() {
             var duration = this._duration();
-            this.tpl.el_.style.left = '0%';
-            this.tpr.el_.style.left = '100%';
+            this.rstb.SeekRSBar.SelectionBarLeft.$el.css('left', '0%');
+            this.rstb.SeekRSBar.SelectionBarRight.$el.css('left', '100%');
             this._setValuesLocked(0, duration);
         },
         _setValuesLocked: function(start, end, writeControlTime) {
             var triggerSliderChange = typeof writeControlTime != 'undefined';
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
             if (this.options.locked) {
-                    this.unlock(); //It is unlocked to change the bar position. In the end it will return the value.
+                this.unlock(); //It is unlocked to change the bar position. In the end it will return the value.
                 this.setValue(0, start, writeControlTime);
                 this.setValue(1, end, writeControlTime);
                 this.lock();
@@ -452,7 +455,6 @@ var $ = require('jquery');
         },
         _triggerSliderChange: function() {
             this.player.trigger("sliderchange");
-            // TODO re-implement without jquery
             
             $('.vjs-selectionbar-left-RS .vjs-time-text').html( $('.vjs-timepanel-left-RS .vjs-time-text').html() );
             $('.vjs-selectionbar-right-RS .vjs-time-text').html( $('.vjs-timepanel-right-RS .vjs-time-text').html() );
@@ -566,25 +568,25 @@ var $ = require('jquery');
      * @param {Object=} options
      * @constructor
      */
-    videojs.RSTimeBar = function() {
-        this.SeekRSBar = new videojs.SeekRSBar();
+    videojs.RSTimeBar = function(player, options) {
+        this.SeekRSBar = new videojs.SeekRSBar(player, options);
     };
 
     videojs.RSTimeBar.prototype.show = function() {
         //todo
     };
 
-    //this will not work with minified/uglified video.js
-    videojs.RSTimeBar.prototype.init_ = function() {
-        //this.rs = this.player_.rangeslider;
-    };
+    // //this will not work with minified/uglified video.js
+    // videojs.RSTimeBar.prototype.init_ = function() {
+    //     //this.rs = this.player_.rangeslider;
+    // };
 
-    //this will not work with minified/uglified video.js
-    videojs.RSTimeBar.prototype.options_ = {
-        children: {
-            'SeekRSBar': {}
-        }
-    };
+    // //this will not work with minified/uglified video.js
+    // videojs.RSTimeBar.prototype.options_ = {
+    //     children: {
+    //         'SeekRSBar': {}
+    //     }
+    // };
 
     videojs.RSTimeBar.prototype.createEl = function() {
         return videojs.Component.prototype.createEl.call(this, 'div', {
@@ -594,7 +596,7 @@ var $ = require('jquery');
     };
 
     videojs.RSTimeBar.prototype.elEx = function(player, options) {
-        return $('<div class="vjs-timebar-RS">').append(this.SeekRSBar.elEx());
+        return $('<div class="vjs-timebar-RS">').append(this.SeekRSBar.elEx(player, options));
     }
         /**
          * Seek Range Slider Bar and holder for the selection bars
@@ -602,7 +604,11 @@ var $ = require('jquery');
          * @param {Object=} options
          * @constructor
          */
-        videojs.SeekRSBar = function() {};
+        videojs.SeekRSBar = function(player, options) {
+            this.player = player;
+            this.options = options;
+            this.rs = player.rangeslider;
+        };
 
         // videojs.Component.extend({
         //     /** @constructor */
@@ -658,14 +664,10 @@ var $ = require('jquery');
             this.TimePanel = timePanel;
 
             var selectionBar = $('<div class="vjs-selectionbar-RS"></div>');
-            var selectionBarLeft = $('<div class="vjs-rangeslider-handle vjs-selectionbar-left-RS"></div>')
-                                        .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
-
-            selectionBarLeft.on('click', function() { alert('blah - kenneth'); });
+            var selectionBarLeft = selectionBarLeft.elEx();
 
             var selectionBarRight = $('<div class="vjs-rangeslider-handle vjs-selectionbar-right-RS"></div>')
                                         .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
-
 
             var timePanel = $('<div class="vjs-timepanel-RS"></div>');
 
@@ -742,7 +744,7 @@ var $ = require('jquery');
             var index = index || 0;
 
             // Position shouldn't change when handle is locked
-            if (this.rs.options.locked)
+            if (this.player.rangeslider.options.locked)
                 return false;
 
             // Check for invalid position
@@ -1026,7 +1028,12 @@ var $ = require('jquery');
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBarLeft = function() {};
+    videojs.SelectionBarLeft = function(player, options) {
+
+      this.player = player;
+
+      this.options = options;
+    };
 
     videojs.SelectionBarLeft.prototype.show = function() {
       //todo
@@ -1046,48 +1053,60 @@ var $ = require('jquery');
         this.rs = rangeslider;
     };
 
-    videojs.SelectionBarLeft.prototype.createEl = function() {
-        return videojs.Component.prototype.createEl.call(this, 'div', {
-            className: 'vjs-rangeslider-handle vjs-selectionbar-left-RS',
-            innerHTML: '<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>'
-        });
-    };
+    // videojs.SelectionBarLeft.prototype.createEl = function() {
+    //     return videojs.Component.prototype.createEl.call(this, 'div', {
+    //         className: 'vjs-rangeslider-handle vjs-selectionbar-left-RS',
+    //         innerHTML: '<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>'
+    //     });
+    // };
+
+    videojs.SelectionBarLeft.prototype.elEx = function() {
+      this.$el = $('<div class="vjs-rangeslider-handle vjs-selectionbar-left-RS"></div>')
+                    .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
+      var that = this;
+
+      this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
+
+      return this.$el;
+                                       
+    }
 
     videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
       
       var RSTBX, handleW, box;
        
         event.preventDefault();
-        videojs.blockTextSelection();
+        //videojs.blockTextSelection();
         this.pressed = true;
-        videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
-        videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
-        videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
-        if (!this.rs.options.locked) {
+        // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
+        // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
+        // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
+        if (!this.player.rangeslider.options.locked) {
             
-            videojs.addClass(this.el_, 'active');
+           // videojs.addClass(this.el_, 'active');
 
             // Adjusted X and Width, so handle doesn't go outside the bar         
           if (event.changedTouches === undefined) {
-            handleW = this.rs.left.el_.offsetWidth; 
-            RSTBX = videojs.findPosition(this.el_).left + (handleW / 2);
-              this.rs.box.offsetX = event.pageX  - RSTBX;
+            handleW = this.$el.width(); 
+            RSTBX = this.$el.offset().left + (handleW / 2);
+              this.player.rangeslider.rstb.SeekRSBar.offsetX = event.pageX  - RSTBX;
             } else {
-              box = this.el_.getBoundingClientRect();
-              this.rs.box.offsetX = event.changedTouches[0].pageX - box.left;
+              box = this.$el.getBoundingClientRect();
+              this.player.rangeslider.rstb.SeekRSBar.offsetX = event.changedTouches[0].pageX - box.left;
  
             }
-          this.rs.box.offsetX2 = this.rs.box.offsetX;  
-          this.rs.box.debug_pause = this.player_.paused();
-            this.rs.box.debug_pause_flag = true;
+          this.player.rangeslider.rstb.SeekRSBar.offsetX2 = this.player.rangeslider.rstb.SeekRSBar.offsetX;  
+
+          this.player.rangeslider.rstb.SeekRSBar.debug_pause = this.player.paused();
+          this.player.rangeslider.rstb.SeekRSBar.debug_pause_flag = true;
 
         } 
     };
 
     videojs.SelectionBarLeft.prototype.onMouseUp = function(event) {
-        videojs.off(document, "mouseup", this.onMouseUp, false);
-        videojs.off(document, "touchend", this.onMouseUp, false);
-        videojs.off(document, "touchcancel", this.onMouseUp, false);
+        // videojs.off(document, "mouseup", this.onMouseUp, false);
+        // videojs.off(document, "touchend", this.onMouseUp, false);
+        // videojs.off(document, "touchcancel", this.onMouseUp, false);
         videojs.removeClass(this.el_, 'active');
         this.pressed = false;
         if (this.rs.options.locked) {
@@ -1103,7 +1122,9 @@ var $ = require('jquery');
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBarRight = function() {};
+    videojs.SelectionBarRight = function() {
+      this.pressed = false;
+    };
 
     // videojs.Component.extend({
     //     /** @constructor */

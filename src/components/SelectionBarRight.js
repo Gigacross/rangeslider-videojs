@@ -4,7 +4,9 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBarRight = function() {};
+    videojs.SelectionBarRight = function() {
+      this.pressed = false;
+    };
 
     // videojs.Component.extend({
     //     /** @constructor */

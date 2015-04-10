@@ -184,9 +184,9 @@
         },
         unlock: function() {
             this.options.locked = false;
-            this.ctp.enable();
-            if (typeof this.box != 'undefined')
-                videojs.removeClass(this.box.el_, 'locked');
+            //this.ctp.enable();
+            // if (typeof this.box != 'undefined')
+            //     videojs.removeClass(this.box.el_, 'locked');
         },
         show: function() {
             this.options.hidden = false;
@@ -238,14 +238,17 @@
             console.log ('seconds ' + seconds + ' to percentage - ' + percent);
             var isValidIndex = (index === 0 || index === 1);
             var isChangeable = !this.locked;
-            if (isChangeable && isValidIndex)
-                this.box.setPosition(index, percent, writeControlTime);
+            if (isChangeable && isValidIndex) {
+                this.rstb.SeekRSBar.setPosition(index, percent, writeControlTime);
+            }
         },
         setValues: function(start, end, writeControlTime) {
+            console.log('setting values - ' + start);
             //index = 0 for the left Arrow and 1 for the right Arrow. Value in seconds
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
-             this._reset();
-
+            console.log('reset');
+            //this._reset();
+            console.log('_setValuesLocked');
             this._setValuesLocked(start, end, writeControlTime);
         },
         getValues: function() { //get values in seconds
@@ -337,15 +340,15 @@
         },
         _reset: function() {
             var duration = this._duration();
-            this.tpl.el_.style.left = '0%';
-            this.tpr.el_.style.left = '100%';
+            this.rstb.SeekRSBar.SelectionBarLeft.$el.css('left', '0%');
+            this.rstb.SeekRSBar.SelectionBarRight.$el.css('left', '100%');
             this._setValuesLocked(0, duration);
         },
         _setValuesLocked: function(start, end, writeControlTime) {
             var triggerSliderChange = typeof writeControlTime != 'undefined';
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
             if (this.options.locked) {
-                    this.unlock(); //It is unlocked to change the bar position. In the end it will return the value.
+                this.unlock(); //It is unlocked to change the bar position. In the end it will return the value.
                 this.setValue(0, start, writeControlTime);
                 this.setValue(1, end, writeControlTime);
                 this.lock();
@@ -426,7 +429,6 @@
         },
         _triggerSliderChange: function() {
             this.player.trigger("sliderchange");
-            // TODO re-implement without jquery
             
             $('.vjs-selectionbar-left-RS .vjs-time-text').html( $('.vjs-timepanel-left-RS .vjs-time-text').html() );
             $('.vjs-selectionbar-right-RS .vjs-time-text').html( $('.vjs-timepanel-right-RS .vjs-time-text').html() );
