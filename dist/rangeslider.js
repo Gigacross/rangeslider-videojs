@@ -291,7 +291,8 @@ var $ = require('jquery');
         },
         playBetween: function(start, end, showRS) {
             showRS = typeof showRS == 'undefined' ? true : showRS;
-            this.player.currentTime = 30;
+            this.player.currentTime(start);
+            
             //if ( this.player_.paused() ){
               this.player.play();
             //}
@@ -836,11 +837,11 @@ var $ = require('jquery');
                         text: TimeText
                     });
                 } else {
-                    tpr.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
+                    // tpr.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
 
-                    if (((tpr.style.left.replace("%", "") || 100) - tpl.style.left.replace("%", "")) <= MaxDisP)
-                        tpr.style.left = Math.max(MinP, Math.min(MaxP, tpl.style.left.replace("%", "") - 0 + MaxDisP)) + '%';
-                        tpr.children[0].innerHTML =  TimeText;
+                    // if (((tpr.style.left.replace("%", "") || 100) - tpl.style.left.replace("%", "")) <= MaxDisP)
+                    //     tpr.style.left = Math.max(MinP, Math.min(MaxP, tpl.style.left.replace("%", "") - 0 + MaxDisP)) + '%';
+                    //     tpr.children[0].innerHTML =  TimeText;
                     
 
                 }
