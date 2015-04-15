@@ -4,7 +4,9 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBar = function() {};
+    videojs.SelectionBar = function(player) {
+        this.player = player;
+    };
 
     //  videojs.Component.extend({
     //     /** @constructor */
@@ -82,13 +84,14 @@
         this.timeEnd = end;
         this.suspendPlay();
 
-        this.player_.on("timeupdate", videojs.bind(this, this._processPlay));
+        this.player.on("timeupdate", videojs.bind(this, this._processPlay));
     };
 
     videojs.SelectionBar.prototype.suspendPlay = function() {
         this.fired = false;
         this.suspend_fired = false;
-        this.player_.off("timeupdate", videojs.bind(this, this._processPlay));
+
+        this.player.off("timeupdate", videojs.bind(this, this._processPlay));
     };
 
     videojs.SelectionBar.prototype._processPlay = function() {
@@ -96,15 +99,15 @@
       var current_time, current_variable, current_actual;
         //Check if current time is between start and end
       //if (this.rs.options.isMobile) {
-      var current_position = this.player_.currentTime()
+      var current_position = this.player.currentTime()
       if (!this.fired) { 
-        current_variable = this.player_.controlBar.currentTimeDisplay.current_time;
-        current_position = this.player_.currentTime();
+        current_variable = this.player.controlBar.currentTimeDisplay.current_time;
+        current_position = this.player.currentTime();
         if ( (current_position < (current_variable - 1.0)) || ( current_position > (current_variable + 1.0))) {
           return;
         }
       } else
-        current_position = this.player_.currentTime();
+        current_position = this.player.currentTime();
         
       if (current_position < this.timeStart ) {
         this.fired = false; //Set fired flag to true
@@ -121,10 +124,10 @@
             }
             this.fired = false; //Set fired flat to false
             console.log("processPlay: PAUSING");
-            this.player_.pause(); //Call end function
+            this.player.pause(); //Call end function
             
             //if ( this.rs.options.locked) {
-                this.player_.currentTime(this.timeEnd);
+                this.player.currentTime(this.timeEnd);
             //}
             this.suspendPlay();
         }

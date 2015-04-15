@@ -276,9 +276,8 @@
             // }
             this._setValuesLocked(start, end);
 
-            console.log("Rangeslider playBetween: " + start + " , " + end);
-            this.bar.activatePlay(start, end);
-
+            //this.bar.activatePlay(start, end);
+            this.rstb.SeekRSBar.SelectionBar.activatePlay(start, end);
             // hide spinner
             this.player.loadingSpinner.hide();
 
