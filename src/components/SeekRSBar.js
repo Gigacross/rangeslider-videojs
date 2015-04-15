@@ -314,7 +314,7 @@
               
         // Percent that the click is through the adjusted area
         
-        return left; //Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
+        return left;
     };
 
     videojs.SeekRSBar.prototype.getRSTBWidth = function() {

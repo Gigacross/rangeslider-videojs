@@ -291,7 +291,7 @@ var $ = require('jquery');
         },
         playBetween: function(start, end, showRS) {
             showRS = typeof showRS == 'undefined' ? true : showRS;
-            this.player.currentTime(start);
+            this.player.currentTime = 30;
             //if ( this.player_.paused() ){
               this.player.play();
             //}
@@ -914,7 +914,7 @@ var $ = require('jquery');
               
         // Percent that the click is through the adjusted area
         
-        return left; //Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
+        return left;
     };
 
     videojs.SeekRSBar.prototype.getRSTBWidth = function() {

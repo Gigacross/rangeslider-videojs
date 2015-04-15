@@ -266,6 +266,7 @@
         playBetween: function(start, end, showRS) {
             showRS = typeof showRS == 'undefined' ? true : showRS;
             this.player.currentTime(start);
+            
             //if ( this.player_.paused() ){
               this.player.play();
             //}
