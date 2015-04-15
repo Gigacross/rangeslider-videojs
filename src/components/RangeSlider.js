@@ -268,18 +268,16 @@
               this.player.play();
             //}
             
-            if (showRS) {
-                this.show();
-                this._reset();
-            } else {
-                this.hide();
-            }
+            // if (showRS) {
+            //     this.show();
+            //     this._reset();
+            // } else {
+            //     this.hide();
+            // }
             this._setValuesLocked(start, end);
 
             console.log("Rangeslider playBetween: " + start + " , " + end);
             this.bar.activatePlay(start, end);
-            
-            
 
             // hide spinner
             this.player.loadingSpinner.hide();
