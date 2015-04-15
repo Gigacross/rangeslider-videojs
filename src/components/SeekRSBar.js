@@ -75,6 +75,11 @@
             return holder;
         };
 
+        videojs.SeekRSBar.prototype.lock = function() {
+            this.$el.addClass('locked');
+            // if (typeof this.box != 'undefined')
+            //     videojs.addClass(this.box.el_, 'locked');
+        };
 
         videojs.SeekRSBar.prototype.onMouseDown = function(event) {
 

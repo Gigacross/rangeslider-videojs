@@ -90,7 +90,8 @@
 
         var timeBar = new videojs.RSTimeBar(player, options, this);
 
-        videoWrapper.find('.vjs-progress-holder').append(timeBar.elEx(player, options));       
+        videoWrapper.find('.vjs-progress-holder')
+                        .append(timeBar.elEx(player, options));       
 
         this.rstb = timeBar;
 
@@ -157,8 +158,6 @@
         this.options = options;
 
         this.init();
-        
-        
     }
 
     //-- Methods
@@ -172,14 +171,17 @@
             //position in second of the arrows
             this.start = 0;
             this.end = 0;
-
-
         },
         lock: function() {
             this.options.locked = true;
+
+            if (typeof this.rstb.SeekRSBar != 'undefined') {
+                this.rstb.SeekRSBar.lock();
+            }
+            
             //this.ctp.enable(false);
-            if (typeof this.box != 'undefined')
-                videojs.addClass(this.box.el_, 'locked');
+            // if (typeof this.box != 'undefined')
+            //     videojs.addClass(this.box.el_, 'locked');
         },
         unlock: function() {
             this.options.locked = false;

@@ -4,8 +4,9 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBar = function(player) {
+    videojs.SelectionBar = function(player, options) {
         this.player = player;
+        this.options = options;
     };
 
     //  videojs.Component.extend({

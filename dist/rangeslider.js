@@ -116,7 +116,8 @@ var $ = require('jquery');
 
         var timeBar = new videojs.RSTimeBar(player, options, this);
 
-        videoWrapper.find('.vjs-progress-holder').append(timeBar.elEx(player, options));       
+        videoWrapper.find('.vjs-progress-holder')
+                        .append(timeBar.elEx(player, options));       
 
         this.rstb = timeBar;
 
@@ -183,8 +184,6 @@ var $ = require('jquery');
         this.options = options;
 
         this.init();
-        
-        
     }
 
     //-- Methods
@@ -198,14 +197,17 @@ var $ = require('jquery');
             //position in second of the arrows
             this.start = 0;
             this.end = 0;
-
-
         },
         lock: function() {
             this.options.locked = true;
+
+            if (typeof this.rstb.SeekRSBar != 'undefined') {
+                this.rstb.SeekRSBar.lock();
+            }
+            
             //this.ctp.enable(false);
-            if (typeof this.box != 'undefined')
-                videojs.addClass(this.box.el_, 'locked');
+            // if (typeof this.box != 'undefined')
+            //     videojs.addClass(this.box.el_, 'locked');
         },
         unlock: function() {
             this.options.locked = false;
@@ -673,6 +675,11 @@ var $ = require('jquery');
             return holder;
         };
 
+        videojs.SeekRSBar.prototype.lock = function() {
+            this.$el.addClass('locked');
+            // if (typeof this.box != 'undefined')
+            //     videojs.addClass(this.box.el_, 'locked');
+        };
 
         videojs.SeekRSBar.prototype.onMouseDown = function(event) {
 
@@ -925,8 +932,9 @@ var $ = require('jquery');
      * @param {Object=} options
      * @constructor
      */
-    videojs.SelectionBar = function(player) {
+    videojs.SelectionBar = function(player, options) {
         this.player = player;
+        this.options = options;
     };
 
     //  videojs.Component.extend({
