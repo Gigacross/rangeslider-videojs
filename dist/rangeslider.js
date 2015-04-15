@@ -760,19 +760,17 @@ var $ = require('jquery');
                 bar = this.SelectionBar;
                 //ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
 
-            var Obj, movingSelectionBar;
+            var movingSelectionBar;
 
             if (index === 0) {
-               Obj =  ObjLeft;
-               movingSelectionBar = this.SelectionBarLeft;
+                movingSelectionBar = this.SelectionBarLeft;
             } else {
-                Obj =  ObjRight;
                 movingSelectionBar = this.SelectionBarRight;
             }
 
 
             //Check if left arrow is passing the right arrow
-            if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRight(left))) {
+            if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this))) {
                 var TimeText = this.formatTime(this.rs._seconds(left));
                 
                 movingSelectionBar.setLocation({
@@ -780,7 +778,7 @@ var $ = require('jquery');
                     text: TimeText
                 });
 
-                index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRight(left);
+                index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this);
 
                 this.rs[index === 0 ? 'start' : 'end'] = this.rs._seconds(left);
 
@@ -855,9 +853,9 @@ var $ = require('jquery');
                     m = time[1];
                     s = time[2];
                 }
-                ctp.children[0].value = h;
-                ctp.children[1].value = m;
-                ctp.children[2].value = s;
+                // ctp.children[0].value = h;
+                // ctp.children[1].value = m;
+                // ctp.children[2].value = s;
             }
         }
         return true;
@@ -953,39 +951,21 @@ var $ = require('jquery');
     };
 
     videojs.SelectionBar.prototype.onMouseUp = function() {
-      
-    var start = this.rs.left.el_.style.left.replace("%", ""),
-        end = this.rs.right.el_.style.left.replace("%", ""),
-        duration = this.player_.duration(),
-        precision = this.rs.updatePrecision,
-        segStart = videojs.round(start * duration / 100, precision),
-        segEnd = videojs.round(end * duration / 100, precision);
-    //this.player_.currentTime(segStart); // disabled for now, because each time clicked - was playing from "start_time"
-    if ( this.rs.options.locked ) {
-      this.player_.play();
-    };
-    this.rs.bar.activatePlay(segStart, segEnd);
-    };
-
-    videojs.SelectionBar.prototype.updateLeft = function(left) {
-        var rightVal = this.rs.right.el_.style.left != '' ? this.rs.right.el_.style.left : 100;
-        var right = parseFloat(rightVal) / 100;
-        this.rs.box.RightBarPosition = right - 0.00001;
-        this.rs.box.LeftBarPosition = 0.00001;
-
-        var width = videojs.round((right - left), this.rs.updatePrecision); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
-
-        //(right+0.00001) is to fix the precision of the css in html
-        if (left <= (right + 0.00001)) {
-            this.rs.bar.el_.style.left = (left * 100) + '%';
-            this.rs.bar.el_.style.width = (width * 100) + '%';
-            return true;
-        }
-        return false;
+        var start = this.rs.left.el_.style.left.replace("%", ""),
+            end = this.rs.right.el_.style.left.replace("%", ""),
+            duration = this.player_.duration(),
+            precision = this.rs.updatePrecision,
+            segStart = videojs.round(start * duration / 100, precision),
+            segEnd = videojs.round(end * duration / 100, precision);
+        //this.player_.currentTime(segStart); // disabled for now, because each time clicked - was playing from "start_time"
+        if ( this.rs.options.locked ) {
+          this.player_.play();
+        };
+        this.rs.bar.activatePlay(segStart, segEnd);
     };
 
     videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, seekRSBar) {
-        var rightVal = $leftEl.offset().left != '' ? $rightEl.offset().left : 100;
+        var rightVal = $rightEl.offset().left != '' ? $rightEl.offset().left : 100;
         var right = parseFloat(rightVal) / 100;
         seekRSBar.RightBarPosition = right - 0.00001;
         seekRSBar.LeftBarPosition = 0.00001;
@@ -995,25 +975,27 @@ var $ = require('jquery');
         //(right+0.00001) is to fix the precision of the css in html
         if (left <= (right + 0.00001)) {
             //seekRSBar.$el.offset().left = (left * 100) + '%';
-            seekRSBar.$el.css({ left: '30%' });
+            seekRSBar.$el.css({ left: (left * 100) + '%' });
             seekRSBar.$el.width((width * 100) + '%');
             return true;
         }
         return false;
     };
 
-    videojs.SelectionBar.prototype.updateRight = function(right) {
-        var leftVal = this.rs.left.el_.style.left != '' ? this.rs.left.el_.style.left : 0;
-        var left = parseFloat(leftVal) / 100;
-        this.rs.box.LeftBarPosition = left + 0.00001;
-        this.rs.box.RightBarPosition = 0.99999;
+    videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl, seekRSBar) {
+        var leftVal = $leftEl.offset().left != '' ? $leftEl.offset().left : 0;
 
-        var width = videojs.round((right - left), this.rs.updatePrecision); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+        var left = parseFloat(leftVal) / 100;
+        seekRSBar.LeftBarPosition = left + 0.00001;
+        seekRSBar.RightBarPosition = 0.99999;
+
+        var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
 
         //(right+0.00001) is to fix the precision of the css in html
         if ((right + 0.00001) >= left) {
-            this.rs.bar.el_.style.width = (width * 100) + '%';
-            this.rs.bar.el_.style.left = ((right - width) * 100) + '%';
+            seekRSBar.$el.width((width * 100) + '%');
+            seekRSBar.$el.css({ left: ((right - width) * 100) + '%' });
+
             return true;
         }
         return false;
@@ -1221,9 +1203,12 @@ var $ = require('jquery');
     };
 
     videojs.SelectionBarRight.prototype.elEx = function() {
+      this.$timeText = $('<span class="vjs-time-text">0:00</span>');
 
       this.$el = $('<div class="vjs-rangeslider-handle vjs-selectionbar-right-RS"></div>')
-                                        .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
+                                        .append('<div class="vjs-selectionbar-arrow-RS"></div>')
+                                        .append($('<div class="vjs-selectionbar-line-RS">')
+                                                    .append(this.$timeText));
       var that = this;
 
       this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
@@ -1231,9 +1216,10 @@ var $ = require('jquery');
       return this.$el;
     };
 
-
     videojs.SelectionBarRight.prototype.setLocation = function(locationDetails) {
-      
+      this.$el.css({ left: locationDetails.left });
+
+      this.$timeText.text(locationDetails.text);
     };
 
     videojs.SelectionBarRight.prototype.onMouseDown = function(event) {

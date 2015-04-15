@@ -159,19 +159,17 @@
                 bar = this.SelectionBar;
                 //ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
 
-            var Obj, movingSelectionBar;
+            var movingSelectionBar;
 
             if (index === 0) {
-               Obj =  ObjLeft;
-               movingSelectionBar = this.SelectionBarLeft;
+                movingSelectionBar = this.SelectionBarLeft;
             } else {
-                Obj =  ObjRight;
                 movingSelectionBar = this.SelectionBarRight;
             }
 
 
             //Check if left arrow is passing the right arrow
-            if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRight(left))) {
+            if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this))) {
                 var TimeText = this.formatTime(this.rs._seconds(left));
                 
                 movingSelectionBar.setLocation({
@@ -179,7 +177,7 @@
                     text: TimeText
                 });
 
-                index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRight(left);
+                index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this);
 
                 this.rs[index === 0 ? 'start' : 'end'] = this.rs._seconds(left);
 
@@ -254,9 +252,9 @@
                     m = time[1];
                     s = time[2];
                 }
-                ctp.children[0].value = h;
-                ctp.children[1].value = m;
-                ctp.children[2].value = s;
+                // ctp.children[0].value = h;
+                // ctp.children[1].value = m;
+                // ctp.children[2].value = s;
             }
         }
         return true;

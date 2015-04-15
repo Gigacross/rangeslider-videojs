@@ -27,39 +27,21 @@
     };
 
     videojs.SelectionBar.prototype.onMouseUp = function() {
-      
-    var start = this.rs.left.el_.style.left.replace("%", ""),
-        end = this.rs.right.el_.style.left.replace("%", ""),
-        duration = this.player_.duration(),
-        precision = this.rs.updatePrecision,
-        segStart = videojs.round(start * duration / 100, precision),
-        segEnd = videojs.round(end * duration / 100, precision);
-    //this.player_.currentTime(segStart); // disabled for now, because each time clicked - was playing from "start_time"
-    if ( this.rs.options.locked ) {
-      this.player_.play();
-    };
-    this.rs.bar.activatePlay(segStart, segEnd);
-    };
-
-    videojs.SelectionBar.prototype.updateLeft = function(left) {
-        var rightVal = this.rs.right.el_.style.left != '' ? this.rs.right.el_.style.left : 100;
-        var right = parseFloat(rightVal) / 100;
-        this.rs.box.RightBarPosition = right - 0.00001;
-        this.rs.box.LeftBarPosition = 0.00001;
-
-        var width = videojs.round((right - left), this.rs.updatePrecision); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
-
-        //(right+0.00001) is to fix the precision of the css in html
-        if (left <= (right + 0.00001)) {
-            this.rs.bar.el_.style.left = (left * 100) + '%';
-            this.rs.bar.el_.style.width = (width * 100) + '%';
-            return true;
-        }
-        return false;
+        var start = this.rs.left.el_.style.left.replace("%", ""),
+            end = this.rs.right.el_.style.left.replace("%", ""),
+            duration = this.player_.duration(),
+            precision = this.rs.updatePrecision,
+            segStart = videojs.round(start * duration / 100, precision),
+            segEnd = videojs.round(end * duration / 100, precision);
+        //this.player_.currentTime(segStart); // disabled for now, because each time clicked - was playing from "start_time"
+        if ( this.rs.options.locked ) {
+          this.player_.play();
+        };
+        this.rs.bar.activatePlay(segStart, segEnd);
     };
 
     videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, seekRSBar) {
-        var rightVal = $leftEl.offset().left != '' ? $rightEl.offset().left : 100;
+        var rightVal = $rightEl.offset().left != '' ? $rightEl.offset().left : 100;
         var right = parseFloat(rightVal) / 100;
         seekRSBar.RightBarPosition = right - 0.00001;
         seekRSBar.LeftBarPosition = 0.00001;
@@ -69,25 +51,27 @@
         //(right+0.00001) is to fix the precision of the css in html
         if (left <= (right + 0.00001)) {
             //seekRSBar.$el.offset().left = (left * 100) + '%';
-            seekRSBar.$el.css({ left: '30%' });
+            seekRSBar.$el.css({ left: (left * 100) + '%' });
             seekRSBar.$el.width((width * 100) + '%');
             return true;
         }
         return false;
     };
 
-    videojs.SelectionBar.prototype.updateRight = function(right) {
-        var leftVal = this.rs.left.el_.style.left != '' ? this.rs.left.el_.style.left : 0;
-        var left = parseFloat(leftVal) / 100;
-        this.rs.box.LeftBarPosition = left + 0.00001;
-        this.rs.box.RightBarPosition = 0.99999;
+    videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl, seekRSBar) {
+        var leftVal = $leftEl.offset().left != '' ? $leftEl.offset().left : 0;
 
-        var width = videojs.round((right - left), this.rs.updatePrecision); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+        var left = parseFloat(leftVal) / 100;
+        seekRSBar.LeftBarPosition = left + 0.00001;
+        seekRSBar.RightBarPosition = 0.99999;
+
+        var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
 
         //(right+0.00001) is to fix the precision of the css in html
         if ((right + 0.00001) >= left) {
-            this.rs.bar.el_.style.width = (width * 100) + '%';
-            this.rs.bar.el_.style.left = ((right - width) * 100) + '%';
+            seekRSBar.$el.width((width * 100) + '%');
+            seekRSBar.$el.css({ left: ((right - width) * 100) + '%' });
+
             return true;
         }
         return false;

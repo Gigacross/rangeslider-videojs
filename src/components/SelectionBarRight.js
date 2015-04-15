@@ -34,9 +34,12 @@
     };
 
     videojs.SelectionBarRight.prototype.elEx = function() {
+      this.$timeText = $('<span class="vjs-time-text">0:00</span>');
 
       this.$el = $('<div class="vjs-rangeslider-handle vjs-selectionbar-right-RS"></div>')
-                                        .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
+                                        .append('<div class="vjs-selectionbar-arrow-RS"></div>')
+                                        .append($('<div class="vjs-selectionbar-line-RS">')
+                                                    .append(this.$timeText));
       var that = this;
 
       this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
@@ -44,9 +47,10 @@
       return this.$el;
     };
 
-
     videojs.SelectionBarRight.prototype.setLocation = function(locationDetails) {
-      
+      this.$el.css({ left: locationDetails.left });
+
+      this.$timeText.text(locationDetails.text);
     };
 
     videojs.SelectionBarRight.prototype.onMouseDown = function(event) {
