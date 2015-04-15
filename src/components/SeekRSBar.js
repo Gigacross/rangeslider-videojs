@@ -4,10 +4,10 @@
          * @param {Object=} options
          * @constructor
          */
-        videojs.SeekRSBar = function(player, options) {
+        videojs.SeekRSBar = function(player, options, rangeSlider) {
             this.player = player;
             this.options = options;
-            this.rs = player.rangeslider;
+            this.rs = rangeSlider;
         };
 
         // videojs.Component.extend({
@@ -50,6 +50,7 @@
 
         videojs.SeekRSBar.prototype.elEx = function(player, options) {
             var holder = $('<div class="vjs-rangeslider-holder"></div>');
+
             var selectionBar = new videojs.SelectionBar(player, options);
             this.SelectionBar = selectionBar;
 
@@ -60,27 +61,14 @@
             this.SelectionBarRight = selectionBarRight;
 
             var timePanel = new videojs.TimePanel(player, options);
-            //this.addChild(timePanel);
             this.TimePanel = timePanel;
 
-            var selectionBar = $('<div class="vjs-selectionbar-RS"></div>');
-            var selectionBarLeft = selectionBarLeft.elEx();
+            var $selectionBar = $('<div class="vjs-selectionbar-RS"></div>');
 
-            var selectionBarRight = $('<div class="vjs-rangeslider-handle vjs-selectionbar-right-RS"></div>')
-                                        .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
-
-            var timePanel = $('<div class="vjs-timepanel-RS"></div>');
-
-            var timePanelLeft = $('<div class="vjs-timepanel-left-RS"><span class="vjs-time-text">00:00</span></div>');
-            var timePanelRight = $('<div class=""><span class="vjs-time-text">00:00</span></div>');
-
-            timePanel.append(timePanelLeft);
-            timePanel.append(timePanelRight);
-
-            holder.append(selectionBar);
-            holder.append(selectionBarLeft);
-            holder.append(selectionBarRight);
-            holder.append(timePanel);
+            holder.append($selectionBar);
+            holder.append(selectionBarLeft.elEx());
+            holder.append(selectionBarRight.elEx());
+            holder.append(timePanel.elEx());
 
             this.$el = holder;
 
@@ -138,7 +126,13 @@
             }
         };
 
+        videojs.SeekRSBar.prototype._isFullscreen = function() {
+            return this.player.isFullscreen();
+        };
+
         videojs.SeekRSBar.prototype.setPosition = function(index, left, writeControlTime) {
+
+            console.log('setPosition - ' + index);
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
             //index = 0 for left side, index = 1 for right side
             var index = index || 0;
@@ -156,18 +150,36 @@
                 return false;
 
             // Alias
-            var ObjLeft = this.rs.left.el_,
-                ObjRight = this.rs.right.el_,
-                Obj = this.rs[index === 0 ? 'left' : 'right'].el_,
-                tpr = this.rs.tpr.el_,
-                tpl = this.rs.tpl.el_,
-                bar = this.rs.bar,
-                ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
+            //Obj = this.rs[index === 0 ? 'left' : 'right'].el_,
+
+            var ObjLeft = this.SelectionBarLeft.$el, 
+                ObjRight = this.SelectionBarRight.$el, 
+                tpr = this.$TimePanelRight,
+                tpl = this.$TimePanelLeft,
+                bar = this.SelectionBar;
+                //ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
+
+            var Obj, movingSelectionBar;
+
+            if (index === 0) {
+               Obj =  ObjLeft;
+               movingSelectionBar = this.SelectionBarLeft;
+            } else {
+                Obj =  ObjRight;
+                movingSelectionBar = this.SelectionBarRight;
+            }
+
 
             //Check if left arrow is passing the right arrow
-            if ((index === 0 ? bar.updateLeft(left) : bar.updateRight(left))) {
-                Obj.style.left = (left * 100) + '%';
-                index === 0 ? bar.updateLeft(left) : bar.updateRight(left);
+            if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRight(left))) {
+                var TimeText = this.formatTime(this.rs._seconds(left));
+                
+                movingSelectionBar.setLocation({
+                    left: (left * 100) + '%',
+                    text: TimeText
+                });
+
+                index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRight(left);
 
                 this.rs[index === 0 ? 'start' : 'end'] = this.rs._seconds(left);
 
@@ -175,30 +187,32 @@
                 //left.zIndex = 10 and right.zIndex=20. This is always less in this case:
                 if (index === 0) {
                     if ((left) >= 0.9)
-                        ObjLeft.style.zIndex = 25;
+                        ObjLeft.css({'z-index' : '25'}); 
                     else
-                        ObjLeft.style.zIndex = 10;
+                        ObjLeft.css({'z-index' : '10'}); 
                 }
 
                 //-- Panel
-                var TimeText = videojs.formatTime(this.rs._seconds(left)),
-                    tplTextLegth = tpl.children[0].innerHTML.length;
+                
+
+                var tplTextLegth = this.TimePanel.leftLength();
+
                 var MaxP, MinP, MaxDisP;
                 if (tplTextLegth <= 4) //0:00
-                    MaxDisP = this.player_.isFullScreen ? 3.25 : 6.5;
+                    MaxDisP = this._isFullscreen ? 3.25 : 6.5;
                 else if (tplTextLegth <= 5) //00:00
-                    MaxDisP = this.player_.isFullScreen ? 4 : 8;
+                    MaxDisP = this._isFullscreen ? 4 : 8;
                 else //0:00:00
-                    MaxDisP = this.player_.isFullScreen ? 5 : 10;
+                    MaxDisP = this._isFullscreen ? 5 : 10;
                 if (TimeText.length <= 4) { //0:00
-                    MaxP = this.player_.isFullScreen ? 97 : 93;
-                    MinP = this.player_.isFullScreen ? 0.1 : 0.5;
+                    MaxP = this._isFullscreen ? 97 : 93;
+                    MinP = this._isFullscreen ? 0.1 : 0.5;
                 } else if (TimeText.length <= 5) { //00:00
-                    MaxP = this.player_.isFullScreen ? 96 : 92;
-                    MinP = this.player_.isFullScreen ? 0.1 : 0.5;
+                    MaxP = this._isFullscreen ? 96 : 92;
+                    MinP = this._isFullscreen ? 0.1 : 0.5;
                 } else { //0:00:00
-                    MaxP = this.player_.isFullScreen ? 95 : 91;
-                    MinP = this.player_.isFullScreen ? 0.1 : 0.5;
+                    MaxP = this._isFullscreen ? 95 : 91;
+                    MinP = this._isFullscreen ? 0.1 : 0.5;
                 }
                 
                 //Fix for BUG #120. Realign margin-left for left tab
@@ -214,11 +228,10 @@
                 }
 
                 if (index === 0) {
-                    tpl.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
-
-                    if ((tpr.style.left.replace("%", "") - tpl.style.left.replace("%", "")) <= MaxDisP)
-                        tpl.style.left = Math.max(MinP, Math.min(MaxP, tpr.style.left.replace("%", "") - MaxDisP)) + '%';
-                    tpl.children[0].innerHTML = TimeText;
+                    this.TimePanel.setLeftPanel({
+                        left: Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%',
+                        text: TimeText
+                    });
                 } else {
                     tpr.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
 
@@ -247,6 +260,35 @@
             }
         }
         return true;
+    };
+
+    videojs.SeekRSBar.prototype.formatTime = function(seconds, guide) {
+      // Default to using seconds as guide
+      guide = guide || seconds;
+      var s = Math.floor(seconds % 60),
+          m = Math.floor(seconds / 60 % 60),
+          h = Math.floor(seconds / 3600),
+          gm = Math.floor(guide / 60 % 60),
+          gh = Math.floor(guide / 3600);
+
+      // handle invalid times
+      if (isNaN(seconds) || seconds === Infinity) {
+        // '-' is false for all relational operators (e.g. <, >=) so this setting
+        // will add the minimum number of fields specified by the guide
+        h = m = s = '-';
+      }
+
+      // Check if we need to show hours
+      h = (h > 0 || gh > 0) ? h + ':' : '';
+
+      // If hours are showing, we may need to add a leading zero.
+      // Always show at least one digit of minutes.
+      m = (((h || gm >= 10) && m < 10) ? '0' + m : m) + ':';
+
+      // Check if leading zero is need for seconds
+      s = (s < 10) ? '0' + s : s;
+
+      return h + m + s;
     };
 
     videojs.SeekRSBar.prototype.calculateDistance = function(event) {

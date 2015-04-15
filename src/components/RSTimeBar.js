@@ -4,8 +4,8 @@
      * @param {Object=} options
      * @constructor
      */
-    videojs.RSTimeBar = function(player, options) {
-        this.SeekRSBar = new videojs.SeekRSBar(player, options);
+    videojs.RSTimeBar = function(player, options, rangeSlider) {
+        this.SeekRSBar = new videojs.SeekRSBar(player, options, rangeSlider);
     };
 
     videojs.RSTimeBar.prototype.show = function() {

@@ -58,6 +58,24 @@
         return false;
     };
 
+    videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, seekRSBar) {
+        var rightVal = $leftEl.offset().left != '' ? $rightEl.offset().left : 100;
+        var right = parseFloat(rightVal) / 100;
+        seekRSBar.RightBarPosition = right - 0.00001;
+        seekRSBar.LeftBarPosition = 0.00001;
+
+        var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+
+        //(right+0.00001) is to fix the precision of the css in html
+        if (left <= (right + 0.00001)) {
+            //seekRSBar.$el.offset().left = (left * 100) + '%';
+            seekRSBar.$el.css({ left: '30%' });
+            seekRSBar.$el.width((width * 100) + '%');
+            return true;
+        }
+        return false;
+    };
+
     videojs.SelectionBar.prototype.updateRight = function(right) {
         var leftVal = this.rs.left.el_.style.left != '' ? this.rs.left.el_.style.left : 0;
         var left = parseFloat(leftVal) / 100;

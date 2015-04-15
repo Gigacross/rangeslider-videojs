@@ -33,6 +33,21 @@
         });
     };
 
+    videojs.SelectionBarRight.prototype.elEx = function() {
+
+      this.$el = $('<div class="vjs-rangeslider-handle vjs-selectionbar-right-RS"></div>')
+                                        .append('<div class="vjs-selectionbar-arrow-RS"></div><div class="vjs-selectionbar-line-RS"><span class="vjs-time-text">0:00</span></div>');
+      var that = this;
+
+      this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
+
+      return this.$el;
+    };
+
+
+    videojs.SelectionBarRight.prototype.setLocation = function(locationDetails) {
+      
+    };
 
     videojs.SelectionBarRight.prototype.onMouseDown = function(event) {
 

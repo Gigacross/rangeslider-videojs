@@ -23,3 +23,10 @@
             innerHTML: '<span class="vjs-time-text">00:00</span>'
         });
     };
+
+    videojs.TimePanelLeft.prototype.elEx = function() {
+        this.$el = $('<div class="vjs-timepanel-left-RS">')
+                        .append('<span class="vjs-time-text">00:00</span>');
+
+        return this.$el;
+    };

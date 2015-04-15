@@ -2,7 +2,6 @@
     function RangeSlider_(options) {
         var player = this;
 
-
         player.rangeslider = new RangeSlider(player, options);
         
         player.tabs_initialised = false;
@@ -89,7 +88,7 @@
     function RangeSlider(player, options) {
         var videoWrapper = $(player.el());
 
-        var timeBar = new videojs.RSTimeBar(player, options);
+        var timeBar = new videojs.RSTimeBar(player, options, this);
 
         videoWrapper.find('.vjs-progress-holder').append(timeBar.elEx(player, options));       
 
@@ -231,6 +230,8 @@
                 this.ctp.hide();
         },
         setValue: function(index, seconds, writeControlTime) {
+            console.log ('setvalue - ' + index);
+
             //index = 0 for the left Arrow and 1 for the right Arrow. Value in seconds
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
 
