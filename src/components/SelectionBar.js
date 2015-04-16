@@ -7,6 +7,8 @@
     videojs.SelectionBar = function(player, options) {
         this.player = player;
         this.options = options;
+        this.fired = false;
+        this.suspend_fired = false;
     };
 
     //  videojs.Component.extend({
@@ -19,14 +21,16 @@
     //     }
     // });
 
-    videojs.SelectionBar.prototype.init_ = function(rangeslider) {
-        this.rs = rangeslider;
-    };
+    // videojs.SelectionBar.prototype.createEl = function() {
+    //     return videojs.Component.prototype.createEl.call(this, 'div', {
+    //         className: 'vjs-selectionbar-RS'
+    //     });
+    // };
 
-    videojs.SelectionBar.prototype.createEl = function() {
-        return videojs.Component.prototype.createEl.call(this, 'div', {
-            className: 'vjs-selectionbar-RS'
-        });
+    videojs.SelectionBar.prototype.elEx = function() {
+        this.$el = $('<div class="vjs-selectionbar-RS"></div>');
+
+        return this.$el;
     };
 
     videojs.SelectionBar.prototype.onMouseUp = function() {

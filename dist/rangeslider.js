@@ -84,14 +84,10 @@ var $ = require('jquery');
                 }
             });
             
-            if ( player.rangeslider.options.showControlBar) {
+            if (player.rangeslider.options.showControlBar) {
               
                 var plugin = player.rangeslider;
-                //All components will be initialize after they have been loaded by videojs
-                for (var index in plugin.components) {
-                    plugin.components[index].init_(player.rangeslider);
-                }
- 
+               
                 if (plugin.options.hidden)
                    plugin.hide(); //Hide the Range Slider
                                 
@@ -121,35 +117,12 @@ var $ = require('jquery');
 
         this.rstb = timeBar;
 
-        //components of the plugin
-        // var controlBar = player.controlBar;
-        // var seekBar = controlBar.progressControl.seekBar;
-        // this.components.RSTimeBar = seekBar.children()[3];
-        // this.components.ControlTimePanel = controlBar.children()[14]; // controlBar.ControlTimePanel;
-
-        //Save local component 
-        // this.rstb = this.components.RSTimeBar;
-        // this.box = this.components.SeekRSBar = this.rstb.children()[0];
-        // this.bar = this.components.SelectionBar = this.box.SelectionBar;
-        // this.left = this.components.SelectionBarLeft = this.box.SelectionBarLeft;
-        // this.right = this.components.SelectionBarRight = this.box.SelectionBarRight;
-        // this.tp = this.components.TimePanel = this.box.TimePanel;
-        // this.tpl = this.components.TimePanelLeft = this.tp.TimePanelLeft;
-        // this.tpr = this.components.TimePanelRight = this.tp.TimePanelRight;
-        // this.ctp = this.components.ControlTimePanel;
-        // this.ctpl = this.components.ControlTimePanelLeft = this.ctp.ControlTimePanelLeft;
-        // this.ctpr = this.components.ControlTimePanelRight = this.ctp.ControlTimePanelRight;
-
-        //player.controlBar.progressControl.seekBar.addChild(timeBar);
-
         var controlTimePanel = new videojs.ControlTimePanel(player, options);
         var controlTimePanelEl = $('<div class="vjs-controltimepanel-RS vjs-control"></div>');
         var controlTimePanelLeft = $('<div class="vjs-controltimepanel-left-RS">Start: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
         controlTimePanelEl.append(controlTimePanelLeft);
         var controlTimePanelRight= $('<div class="vjs-controltimepanel-right-RS">End: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
         controlTimePanelEl.append(controlTimePanelRight);
-
-        //player.controlBar.addChild(controlTimePanel);
 
         this.ctp = controlTimePanel;
 
@@ -158,8 +131,6 @@ var $ = require('jquery');
         var player = player || this;
 
         this.player = player;
-
-        //this.components = components; // holds any custom components we add to the player
 
         options = options || {}; // plugin options
 
@@ -212,8 +183,10 @@ var $ = require('jquery');
         unlock: function() {
             this.options.locked = false;
             //this.ctp.enable();
-            // if (typeof this.box != 'undefined')
-            //     videojs.removeClass(this.box.el_, 'locked');
+
+            if (typeof this.rstb.SeekRSBar != 'undefined') {
+                this.rstb.SeekRSBar.unLock();
+            }
         },
         show: function() {
             this.options.hidden = false;
@@ -630,19 +603,6 @@ var $ = require('jquery');
         //     }
         // });
 
-        // videojs.SeekRSBar.prototype.init_ = function(rangeslider) {
-        //     this.rs = rangeslider;
-        // };
-
-        // videojs.SeekRSBar.prototype.options_ = {
-        //     children: {
-        //         'SelectionBar': {},
-        //         'SelectionBarLeft': {},
-        //         'SelectionBarRight': {},
-        //         'TimePanel': {},
-        //     }
-        // };
-
         videojs.SeekRSBar.prototype.createEl = function() {
             return videojs.Component.prototype.createEl.call(this, 'div', {
                 className: 'vjs-rangeslider-holder'
@@ -664,9 +624,7 @@ var $ = require('jquery');
             var timePanel = new videojs.TimePanel(player, options);
             this.TimePanel = timePanel;
 
-            var $selectionBar = $('<div class="vjs-selectionbar-RS"></div>');
-
-            holder.append($selectionBar);
+            holder.append(selectionBar.elEx());
             holder.append(selectionBarLeft.elEx());
             holder.append(selectionBarRight.elEx());
             holder.append(timePanel.elEx());
@@ -678,8 +636,10 @@ var $ = require('jquery');
 
         videojs.SeekRSBar.prototype.lock = function() {
             this.$el.addClass('locked');
-            // if (typeof this.box != 'undefined')
-            //     videojs.addClass(this.box.el_, 'locked');
+        };
+
+        videojs.SeekRSBar.prototype.unLock = function() {
+            this.$el.removeClass('locked');
         };
 
         videojs.SeekRSBar.prototype.onMouseDown = function(event) {
@@ -737,8 +697,6 @@ var $ = require('jquery');
         };
 
         videojs.SeekRSBar.prototype.setPosition = function(index, left, writeControlTime) {
-
-            console.log('setPosition - ' + index);
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
             //index = 0 for left side, index = 1 for right side
             var index = index || 0;
@@ -755,15 +713,12 @@ var $ = require('jquery');
             if (!(index === 0 || index === 1))
                 return false;
 
-            // Alias
-            //Obj = this.rs[index === 0 ? 'left' : 'right'].el_,
-
             var ObjLeft = this.SelectionBarLeft.$el, 
                 ObjRight = this.SelectionBarRight.$el, 
                 tpr = this.$TimePanelRight,
                 tpl = this.$TimePanelLeft,
                 bar = this.SelectionBar;
-                //ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
+                
 
             var movingSelectionBar;
 
@@ -772,7 +727,6 @@ var $ = require('jquery');
             } else {
                 movingSelectionBar = this.SelectionBarRight;
             }
-
 
             //Check if left arrow is passing the right arrow
             if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this))) {
@@ -785,7 +739,7 @@ var $ = require('jquery');
 
                 index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this);
 
-                this.rs[index === 0 ? 'start' : 'end'] = this.rs._seconds(left);
+                //this.rs[index === 0 ? 'start' : 'end'] = this.rs._seconds(left);
 
                 //Fix the problem  when you press the button and the two arrow are underhand
                 //left.zIndex = 10 and right.zIndex=20. This is always less in this case:
@@ -796,31 +750,7 @@ var $ = require('jquery');
                         ObjLeft.css({'z-index' : '10'}); 
                 }
 
-                //-- Panel
-                
-
-                var tplTextLegth = this.TimePanel.leftLength();
-
-                var MaxP, MinP, MaxDisP;
-                if (tplTextLegth <= 4) //0:00
-                    MaxDisP = this._isFullscreen ? 3.25 : 6.5;
-                else if (tplTextLegth <= 5) //00:00
-                    MaxDisP = this._isFullscreen ? 4 : 8;
-                else //0:00:00
-                    MaxDisP = this._isFullscreen ? 5 : 10;
-                if (TimeText.length <= 4) { //0:00
-                    MaxP = this._isFullscreen ? 97 : 93;
-                    MinP = this._isFullscreen ? 0.1 : 0.5;
-                } else if (TimeText.length <= 5) { //00:00
-                    MaxP = this._isFullscreen ? 96 : 92;
-                    MinP = this._isFullscreen ? 0.1 : 0.5;
-                } else { //0:00:00
-                    MaxP = this._isFullscreen ? 95 : 91;
-                    MinP = this._isFullscreen ? 0.1 : 0.5;
-                }
-                
                 //Fix for BUG #120. Realign margin-left for left tab
-                //TODO - put this back without jquery
                 if (index === 0) {
                   if (TimeText.length <= 4) {
                     $('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left", "-3.4em" );
@@ -831,39 +761,64 @@ var $ = require('jquery');
                   }
                 }
 
-                if (index === 0) {
-                    this.TimePanel.setLeftPanel({
-                        left: Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%',
-                        text: TimeText
-                    });
-                } else {
-                    // tpr.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
-
-                    // if (((tpr.style.left.replace("%", "") || 100) - tpl.style.left.replace("%", "")) <= MaxDisP)
-                    //     tpr.style.left = Math.max(MinP, Math.min(MaxP, tpl.style.left.replace("%", "") - 0 + MaxDisP)) + '%';
-                    //     tpr.children[0].innerHTML =  TimeText;
-                    
-
-                }
-                //-- Control Time
-                if (writeControlTime) {
-                    var time = TimeText.split(":"),
-                        h, m, s;
-                    if (time.length == 2) {
-                        h = 0;
-                        m = time[0];
-                        s = time[1];
-                } else {
-                    h = time[0];
-                    m = time[1];
-                    s = time[2];
-                }
-                // ctp.children[0].value = h;
-                // ctp.children[1].value = m;
-                // ctp.children[2].value = s;
+                //this._updateTimePanel();
+           
             }
+            return true;
+        };
+
+    videojs.SeekRSBar.prototype._updateTimePanel = function(index) {
+        //var ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
+
+        //-- Panel
+        var tplTextLegth = this.TimePanel.leftLength();
+
+        var MaxP, MinP, MaxDisP;
+        if (tplTextLegth <= 4) //0:00
+            MaxDisP = this._isFullscreen ? 3.25 : 6.5;
+        else if (tplTextLegth <= 5) //00:00
+            MaxDisP = this._isFullscreen ? 4 : 8;
+        else //0:00:00
+            MaxDisP = this._isFullscreen ? 5 : 10;
+        if (TimeText.length <= 4) { //0:00
+            MaxP = this._isFullscreen ? 97 : 93;
+            MinP = this._isFullscreen ? 0.1 : 0.5;
+        } else if (TimeText.length <= 5) { //00:00
+            MaxP = this._isFullscreen ? 96 : 92;
+            MinP = this._isFullscreen ? 0.1 : 0.5;
+        } else { //0:00:00
+            MaxP = this._isFullscreen ? 95 : 91;
+            MinP = this._isFullscreen ? 0.1 : 0.5;
         }
-        return true;
+        
+        if (index === 0) {
+            this.TimePanel.setLeftPanel({
+                left: Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%',
+                text: TimeText
+            });
+        } else {
+            this.TimePanel.setRightPanel({
+
+            });
+        }
+        //-- Control Time
+        if (writeControlTime) {
+            var time = TimeText.split(":"),
+                h, m, s;
+            if (time.length == 2) {
+                h = 0;
+                m = time[0];
+                s = time[1];
+            } else {
+                h = time[0];
+                m = time[1];
+                s = time[2];
+            }
+        // ctp.children[0].value = h;
+        // ctp.children[1].value = m;
+        // ctp.children[2].value = s;
+        }
+        
     };
 
     videojs.SeekRSBar.prototype.formatTime = function(seconds, guide) {
@@ -936,6 +891,8 @@ var $ = require('jquery');
     videojs.SelectionBar = function(player, options) {
         this.player = player;
         this.options = options;
+        this.fired = false;
+        this.suspend_fired = false;
     };
 
     //  videojs.Component.extend({
@@ -948,14 +905,16 @@ var $ = require('jquery');
     //     }
     // });
 
-    videojs.SelectionBar.prototype.init_ = function(rangeslider) {
-        this.rs = rangeslider;
-    };
+    // videojs.SelectionBar.prototype.createEl = function() {
+    //     return videojs.Component.prototype.createEl.call(this, 'div', {
+    //         className: 'vjs-selectionbar-RS'
+    //     });
+    // };
 
-    videojs.SelectionBar.prototype.createEl = function() {
-        return videojs.Component.prototype.createEl.call(this, 'div', {
-            className: 'vjs-selectionbar-RS'
-        });
+    videojs.SelectionBar.prototype.elEx = function() {
+        this.$el = $('<div class="vjs-selectionbar-RS"></div>');
+
+        return this.$el;
     };
 
     videojs.SelectionBar.prototype.onMouseUp = function() {
@@ -1337,14 +1296,20 @@ var $ = require('jquery');
     };
 
     videojs.TimePanel.prototype.setLeftPanel = function(settings) {
-        console.log(this.$TimePanelLeft);
-        this.$TimePanelLeft.css({ left: '30%' });
-       // this.$TimePanelLeft.css('left', settings.left);
+        this.$TimePanelLeft.css({ left: settings.left });
         this.$TimePanelLeft.find('.vjs-time-text')[0]
                         .innerHTML = settings.text;
     // if ((tpr.style.left.replace("%", "") - tpl.style.left.replace("%", "")) <= MaxDisP)
     //     tpl.style.left = Math.max(MinP, Math.min(MaxP, tpr.style.left.replace("%", "") - MaxDisP)) + '%';
     // tpl.children[0].innerHTML = TimeText;
+    };
+
+    videojs.TimePanel.prototype.setRightPanel = function(settings) {
+        // tpr.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
+
+                    // if (((tpr.style.left.replace("%", "") || 100) - tpl.style.left.replace("%", "")) <= MaxDisP)
+                    //     tpr.style.left = Math.max(MinP, Math.min(MaxP, tpl.style.left.replace("%", "") - 0 + MaxDisP)) + '%';
+                    //     tpr.children[0].innerHTML =  TimeText;
     };
     /**
      * This is the left time panel

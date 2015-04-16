@@ -58,14 +58,10 @@
                 }
             });
             
-            if ( player.rangeslider.options.showControlBar) {
+            if (player.rangeslider.options.showControlBar) {
               
                 var plugin = player.rangeslider;
-                //All components will be initialize after they have been loaded by videojs
-                for (var index in plugin.components) {
-                    plugin.components[index].init_(player.rangeslider);
-                }
- 
+               
                 if (plugin.options.hidden)
                    plugin.hide(); //Hide the Range Slider
                                 
@@ -95,35 +91,12 @@
 
         this.rstb = timeBar;
 
-        //components of the plugin
-        // var controlBar = player.controlBar;
-        // var seekBar = controlBar.progressControl.seekBar;
-        // this.components.RSTimeBar = seekBar.children()[3];
-        // this.components.ControlTimePanel = controlBar.children()[14]; // controlBar.ControlTimePanel;
-
-        //Save local component 
-        // this.rstb = this.components.RSTimeBar;
-        // this.box = this.components.SeekRSBar = this.rstb.children()[0];
-        // this.bar = this.components.SelectionBar = this.box.SelectionBar;
-        // this.left = this.components.SelectionBarLeft = this.box.SelectionBarLeft;
-        // this.right = this.components.SelectionBarRight = this.box.SelectionBarRight;
-        // this.tp = this.components.TimePanel = this.box.TimePanel;
-        // this.tpl = this.components.TimePanelLeft = this.tp.TimePanelLeft;
-        // this.tpr = this.components.TimePanelRight = this.tp.TimePanelRight;
-        // this.ctp = this.components.ControlTimePanel;
-        // this.ctpl = this.components.ControlTimePanelLeft = this.ctp.ControlTimePanelLeft;
-        // this.ctpr = this.components.ControlTimePanelRight = this.ctp.ControlTimePanelRight;
-
-        //player.controlBar.progressControl.seekBar.addChild(timeBar);
-
         var controlTimePanel = new videojs.ControlTimePanel(player, options);
         var controlTimePanelEl = $('<div class="vjs-controltimepanel-RS vjs-control"></div>');
         var controlTimePanelLeft = $('<div class="vjs-controltimepanel-left-RS">Start: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
         controlTimePanelEl.append(controlTimePanelLeft);
         var controlTimePanelRight= $('<div class="vjs-controltimepanel-right-RS">End: <input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/>:<input type="text" id="controltimepanel" maxlength="2" value="00"/></div>');
         controlTimePanelEl.append(controlTimePanelRight);
-
-        //player.controlBar.addChild(controlTimePanel);
 
         this.ctp = controlTimePanel;
 
@@ -132,8 +105,6 @@
         var player = player || this;
 
         this.player = player;
-
-        //this.components = components; // holds any custom components we add to the player
 
         options = options || {}; // plugin options
 
@@ -186,8 +157,10 @@
         unlock: function() {
             this.options.locked = false;
             //this.ctp.enable();
-            // if (typeof this.box != 'undefined')
-            //     videojs.removeClass(this.box.el_, 'locked');
+
+            if (typeof this.rstb.SeekRSBar != 'undefined') {
+                this.rstb.SeekRSBar.unLock();
+            }
         },
         show: function() {
             this.options.hidden = false;

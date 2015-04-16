@@ -64,12 +64,18 @@
     };
 
     videojs.TimePanel.prototype.setLeftPanel = function(settings) {
-        console.log(this.$TimePanelLeft);
-        this.$TimePanelLeft.css({ left: '30%' });
-       // this.$TimePanelLeft.css('left', settings.left);
+        this.$TimePanelLeft.css({ left: settings.left });
         this.$TimePanelLeft.find('.vjs-time-text')[0]
                         .innerHTML = settings.text;
     // if ((tpr.style.left.replace("%", "") - tpl.style.left.replace("%", "")) <= MaxDisP)
     //     tpl.style.left = Math.max(MinP, Math.min(MaxP, tpr.style.left.replace("%", "") - MaxDisP)) + '%';
     // tpl.children[0].innerHTML = TimeText;
+    };
+
+    videojs.TimePanel.prototype.setRightPanel = function(settings) {
+        // tpr.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
+
+                    // if (((tpr.style.left.replace("%", "") || 100) - tpl.style.left.replace("%", "")) <= MaxDisP)
+                    //     tpr.style.left = Math.max(MinP, Math.min(MaxP, tpl.style.left.replace("%", "") - 0 + MaxDisP)) + '%';
+                    //     tpr.children[0].innerHTML =  TimeText;
     };

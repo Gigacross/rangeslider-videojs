@@ -29,19 +29,6 @@
         //     }
         // });
 
-        // videojs.SeekRSBar.prototype.init_ = function(rangeslider) {
-        //     this.rs = rangeslider;
-        // };
-
-        // videojs.SeekRSBar.prototype.options_ = {
-        //     children: {
-        //         'SelectionBar': {},
-        //         'SelectionBarLeft': {},
-        //         'SelectionBarRight': {},
-        //         'TimePanel': {},
-        //     }
-        // };
-
         videojs.SeekRSBar.prototype.createEl = function() {
             return videojs.Component.prototype.createEl.call(this, 'div', {
                 className: 'vjs-rangeslider-holder'
@@ -63,9 +50,7 @@
             var timePanel = new videojs.TimePanel(player, options);
             this.TimePanel = timePanel;
 
-            var $selectionBar = $('<div class="vjs-selectionbar-RS"></div>');
-
-            holder.append($selectionBar);
+            holder.append(selectionBar.elEx());
             holder.append(selectionBarLeft.elEx());
             holder.append(selectionBarRight.elEx());
             holder.append(timePanel.elEx());
@@ -77,8 +62,10 @@
 
         videojs.SeekRSBar.prototype.lock = function() {
             this.$el.addClass('locked');
-            // if (typeof this.box != 'undefined')
-            //     videojs.addClass(this.box.el_, 'locked');
+        };
+
+        videojs.SeekRSBar.prototype.unLock = function() {
+            this.$el.removeClass('locked');
         };
 
         videojs.SeekRSBar.prototype.onMouseDown = function(event) {
@@ -136,8 +123,6 @@
         };
 
         videojs.SeekRSBar.prototype.setPosition = function(index, left, writeControlTime) {
-
-            console.log('setPosition - ' + index);
             var writeControlTime = typeof writeControlTime != 'undefined' ? writeControlTime : true;
             //index = 0 for left side, index = 1 for right side
             var index = index || 0;
@@ -154,15 +139,12 @@
             if (!(index === 0 || index === 1))
                 return false;
 
-            // Alias
-            //Obj = this.rs[index === 0 ? 'left' : 'right'].el_,
-
             var ObjLeft = this.SelectionBarLeft.$el, 
                 ObjRight = this.SelectionBarRight.$el, 
                 tpr = this.$TimePanelRight,
                 tpl = this.$TimePanelLeft,
                 bar = this.SelectionBar;
-                //ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
+                
 
             var movingSelectionBar;
 
@@ -171,7 +153,6 @@
             } else {
                 movingSelectionBar = this.SelectionBarRight;
             }
-
 
             //Check if left arrow is passing the right arrow
             if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this))) {
@@ -184,7 +165,7 @@
 
                 index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this);
 
-                this.rs[index === 0 ? 'start' : 'end'] = this.rs._seconds(left);
+                //this.rs[index === 0 ? 'start' : 'end'] = this.rs._seconds(left);
 
                 //Fix the problem  when you press the button and the two arrow are underhand
                 //left.zIndex = 10 and right.zIndex=20. This is always less in this case:
@@ -195,31 +176,7 @@
                         ObjLeft.css({'z-index' : '10'}); 
                 }
 
-                //-- Panel
-                
-
-                var tplTextLegth = this.TimePanel.leftLength();
-
-                var MaxP, MinP, MaxDisP;
-                if (tplTextLegth <= 4) //0:00
-                    MaxDisP = this._isFullscreen ? 3.25 : 6.5;
-                else if (tplTextLegth <= 5) //00:00
-                    MaxDisP = this._isFullscreen ? 4 : 8;
-                else //0:00:00
-                    MaxDisP = this._isFullscreen ? 5 : 10;
-                if (TimeText.length <= 4) { //0:00
-                    MaxP = this._isFullscreen ? 97 : 93;
-                    MinP = this._isFullscreen ? 0.1 : 0.5;
-                } else if (TimeText.length <= 5) { //00:00
-                    MaxP = this._isFullscreen ? 96 : 92;
-                    MinP = this._isFullscreen ? 0.1 : 0.5;
-                } else { //0:00:00
-                    MaxP = this._isFullscreen ? 95 : 91;
-                    MinP = this._isFullscreen ? 0.1 : 0.5;
-                }
-                
                 //Fix for BUG #120. Realign margin-left for left tab
-                //TODO - put this back without jquery
                 if (index === 0) {
                   if (TimeText.length <= 4) {
                     $('.vjs-selectionbar-left-RS div.vjs-selectionbar-line-RS').css("margin-left", "-3.4em" );
@@ -230,39 +187,64 @@
                   }
                 }
 
-                if (index === 0) {
-                    this.TimePanel.setLeftPanel({
-                        left: Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%',
-                        text: TimeText
-                    });
-                } else {
-                    // tpr.style.left = Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%';
-
-                    // if (((tpr.style.left.replace("%", "") || 100) - tpl.style.left.replace("%", "")) <= MaxDisP)
-                    //     tpr.style.left = Math.max(MinP, Math.min(MaxP, tpl.style.left.replace("%", "") - 0 + MaxDisP)) + '%';
-                    //     tpr.children[0].innerHTML =  TimeText;
-                    
-
-                }
-                //-- Control Time
-                if (writeControlTime) {
-                    var time = TimeText.split(":"),
-                        h, m, s;
-                    if (time.length == 2) {
-                        h = 0;
-                        m = time[0];
-                        s = time[1];
-                } else {
-                    h = time[0];
-                    m = time[1];
-                    s = time[2];
-                }
-                // ctp.children[0].value = h;
-                // ctp.children[1].value = m;
-                // ctp.children[2].value = s;
+                //this._updateTimePanel();
+           
             }
+            return true;
+        };
+
+    videojs.SeekRSBar.prototype._updateTimePanel = function(index) {
+        //var ctp = this.rs[index === 0 ? 'ctpl' : 'ctpr'].el_;
+
+        //-- Panel
+        var tplTextLegth = this.TimePanel.leftLength();
+
+        var MaxP, MinP, MaxDisP;
+        if (tplTextLegth <= 4) //0:00
+            MaxDisP = this._isFullscreen ? 3.25 : 6.5;
+        else if (tplTextLegth <= 5) //00:00
+            MaxDisP = this._isFullscreen ? 4 : 8;
+        else //0:00:00
+            MaxDisP = this._isFullscreen ? 5 : 10;
+        if (TimeText.length <= 4) { //0:00
+            MaxP = this._isFullscreen ? 97 : 93;
+            MinP = this._isFullscreen ? 0.1 : 0.5;
+        } else if (TimeText.length <= 5) { //00:00
+            MaxP = this._isFullscreen ? 96 : 92;
+            MinP = this._isFullscreen ? 0.1 : 0.5;
+        } else { //0:00:00
+            MaxP = this._isFullscreen ? 95 : 91;
+            MinP = this._isFullscreen ? 0.1 : 0.5;
         }
-        return true;
+        
+        if (index === 0) {
+            this.TimePanel.setLeftPanel({
+                left: Math.max(MinP, Math.min(MaxP, (left * 100 - MaxDisP / 2))) + '%',
+                text: TimeText
+            });
+        } else {
+            this.TimePanel.setRightPanel({
+
+            });
+        }
+        //-- Control Time
+        if (writeControlTime) {
+            var time = TimeText.split(":"),
+                h, m, s;
+            if (time.length == 2) {
+                h = 0;
+                m = time[0];
+                s = time[1];
+            } else {
+                h = time[0];
+                m = time[1];
+                s = time[2];
+            }
+        // ctp.children[0].value = h;
+        // ctp.children[1].value = m;
+        // ctp.children[2].value = s;
+        }
+        
     };
 
     videojs.SeekRSBar.prototype.formatTime = function(seconds, guide) {
