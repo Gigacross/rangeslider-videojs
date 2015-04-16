@@ -582,6 +582,10 @@ var $ = require('jquery');
             this.player = player;
             this.options = options;
             this.rs = rangeSlider;
+
+            this.move = $.proxy(this.onMouseMove,this);
+            this.up = $.proxy(this.onMouseUp,this);
+            this.down = $.proxy(this.onMouseDown,this);
         };
 
         // videojs.Component.extend({
@@ -602,12 +606,6 @@ var $ = require('jquery');
                 
         //     }
         // });
-
-        videojs.SeekRSBar.prototype.createEl = function() {
-            return videojs.Component.prototype.createEl.call(this, 'div', {
-                className: 'vjs-rangeslider-holder'
-            });
-        };
 
         videojs.SeekRSBar.prototype.elEx = function(player, options) {
             var holder = $('<div class="vjs-rangeslider-holder"></div>');
@@ -631,6 +629,8 @@ var $ = require('jquery');
 
             this.$el = holder;
 
+            this.$el.on('mousedown', this.down);
+
             return holder;
         };
 
@@ -643,16 +643,17 @@ var $ = require('jquery');
         };
 
         videojs.SeekRSBar.prototype.onMouseDown = function(event) {
-
+            console.log('SeekRSBar - onMouseDown');
             event.preventDefault();
-            videojs.blockTextSelection();
+            //NOT AVAILABLE in dist version
+            //videojs.blockTextSelection();
 
             if (!this.rs.options.locked) {
-                videojs.on(document, "mousemove", videojs.bind(this, this.onMouseMove));
-                videojs.on(document, "touchmove", videojs.bind(this, this.onMouseMove));
-                videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
-                videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
-                videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
+                $(document).on("mousemove", this.move);
+                $(document).on("mouseup", this.up);
+                // videojs.on(document, "touchmove", videojs.bind(this, this.onMouseMove));
+                // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
+                // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
 
             } //else {
             //  videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
@@ -663,32 +664,35 @@ var $ = require('jquery');
         };
 
         videojs.SeekRSBar.prototype.onMouseUp = function(event) {
-
-            videojs.off(document, "mousemove", this.onMouseMove, false);
-            videojs.off(document, "touchmove", this.onMouseMove, false);
-            videojs.off(document, "mouseup", this.onMouseUp, false);
-            videojs.off(document, "touchend", this.onMouseUp, false);
-            videojs.off(document, "touchcancel", this.onMouseUp, false);
+            $(document).off('mousemove', this.move);
+            $(document).off('mouseup', this.up);
+            // videojs.off(document, "touchmove", this.onMouseMove, false);
+            // videojs.off(document, "touchend", this.onMouseUp, false);
+            // videojs.off(document, "touchcancel", this.onMouseUp, false);
 
         };
 
         videojs.SeekRSBar.prototype.onMouseMove = function(event) {
-
+            console.log('SeekRSBar - mousemove');
             var left = this.calculateDistance(event);
+            var isPressed = false;
 
-
-            if (this.rs.left.pressed) 
+            if (this.SelectionBarLeft.pressed) {
                 this.setPosition(0, left);
-            else if (this.rs.right.pressed) 
+                isPressed = true;
+            }
+            else if (this.SelectionBarRight.pressed) {
                 this.setPosition(1, left);
+                isPressed = true;
+            }
 
             //Fix a problem with the presition in the display time
     //        var currentTimeDisplay = this.player_.controlBar.currentTimeDisplay.content;
     //        currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>' + vjs.formatTime(this.rs._seconds(left), this.player_.duration());
 
             // Trigger slider change
-            if (this.rs.left.pressed || this.rs.right.pressed) {
-                this.rs._triggerSliderChange();
+            if (isPressed) {
+                //this.rs._triggerSliderChange();
             }
         };
 
@@ -873,14 +877,19 @@ var $ = require('jquery');
         return left;
     };
 
-    videojs.SeekRSBar.prototype.getRSTBWidth = function() {
-        return this.el_.offsetWidth;
-    };
     videojs.SeekRSBar.prototype.getRSTBX = function() {
-        return videojs.findPosition(this.el_).left;
+        return this.$el.offset().left;
+        //return videojs.findPosition(this.el_).left;
     };
+
+    videojs.SeekRSBar.prototype.getRSTBWidth = function() {
+        return this.$el.width();
+        // return this.el_.offsetWidth;
+    };
+
     videojs.SeekRSBar.prototype.getWidth = function() {
-        return this.rs.left.el_.offsetWidth; //does not matter left or right
+        return this.SelectionBarLeft.$el.width(); //does not matter left or right, assume the same width for both
+       // return this.rs.left.el_.offsetWidth; //does not matter left or right
     };
     /**
      * This is the bar with the selection of the RangeSlider
@@ -1091,6 +1100,7 @@ var $ = require('jquery');
     };
 
     videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
+      console.log('SelectionBarLeft - onMouseDown');
       
       var RSTBX, handleW, box;
        
@@ -1179,7 +1189,7 @@ var $ = require('jquery');
                                                     .append(this.$timeText));
       var that = this;
 
-      this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
+      //this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
 
       return this.$el;
     };
@@ -1195,7 +1205,7 @@ var $ = require('jquery');
       var RSTBX, handleW, box;
 
         event.preventDefault();
-        videojs.blockTextSelection();
+        //videojs.blockTextSelection();
         this.pressed = true;
         videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));

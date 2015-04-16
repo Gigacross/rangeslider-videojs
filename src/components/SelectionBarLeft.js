@@ -56,6 +56,7 @@
     };
 
     videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
+      console.log('SelectionBarLeft - onMouseDown');
       
       var RSTBX, handleW, box;
        

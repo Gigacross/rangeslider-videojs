@@ -42,7 +42,7 @@
                                                     .append(this.$timeText));
       var that = this;
 
-      this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
+      //this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
 
       return this.$el;
     };
@@ -58,7 +58,7 @@
       var RSTBX, handleW, box;
 
         event.preventDefault();
-        videojs.blockTextSelection();
+        //videojs.blockTextSelection();
         this.pressed = true;
         videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
