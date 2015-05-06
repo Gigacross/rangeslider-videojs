@@ -293,23 +293,30 @@
         rstbX = rstbX + (handleW / 2);
         rstbW = rstbW - handleW;
         
-        cursorPosition = event.pageX - this.offsetX;
+        // cursorPosition = event.pageX - this.offsetX;
         this.debug_handlel = rstbX;
         this.debug_handler = rstbW;
-        left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
-              
+        console.log("event.pageX = ", event.pageX);
+        console.log("rstbX = ", rstbX);
+        console.log("rstbW = ", rstbW);
+        console.log("handleW = ", handleW);
+        console.log("left is = ", Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW)));
+        // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
+        left =  Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
         
         return left;
     };
 
     videojs.SeekRSBar.prototype.getRSTBX = function() {
-        return this.$el.offset().left;
+        // console.log(this.$el.find(".vjs-selectionbar-RS"));
+        return this.$el.find(".vjs-selectionbar-RS").offset().left;
         //return videojs.findPosition(this.el_).left;
     };
 
     videojs.SeekRSBar.prototype.getRSTBWidth = function() {
-        return this.$el.width();
+        return this.$el.find(".vjs-selectionbar-RS").width();
+        // return this.$el.width();
         // return this.el_.offsetWidth;
     };
 

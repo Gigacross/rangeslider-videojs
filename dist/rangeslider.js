@@ -867,23 +867,30 @@ var $ = require('jquery');
         rstbX = rstbX + (handleW / 2);
         rstbW = rstbW - handleW;
         
-        cursorPosition = event.pageX - this.offsetX;
+        // cursorPosition = event.pageX - this.offsetX;
         this.debug_handlel = rstbX;
         this.debug_handler = rstbW;
-        left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
-              
+        console.log("event.pageX = ", event.pageX);
+        console.log("rstbX = ", rstbX);
+        console.log("rstbW = ", rstbW);
+        console.log("handleW = ", handleW);
+        console.log("left is = ", Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW)));
+        // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
+        left =  Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
         
         return left;
     };
 
     videojs.SeekRSBar.prototype.getRSTBX = function() {
-        return this.$el.offset().left;
+        // console.log(this.$el.find(".vjs-selectionbar-RS"));
+        return this.$el.find(".vjs-selectionbar-RS").offset().left;
         //return videojs.findPosition(this.el_).left;
     };
 
     videojs.SeekRSBar.prototype.getRSTBWidth = function() {
-        return this.$el.width();
+        return this.$el.find(".vjs-selectionbar-RS").width();
+        // return this.$el.width();
         // return this.el_.offsetWidth;
     };
 
@@ -941,8 +948,21 @@ var $ = require('jquery');
     };
 
     videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, seekRSBar) {
+        // console.log("selectionBar", this.$el);
+        // console.log("this offset =", this.$el.offset().left);
+        // console.log("$rightEl", $rightEl);
+        // console.log("$rightEl.offset().left = ",$rightEl.offset().left);
+        var seekRSBarOffset = this.$el.offset().left != '' ? this.$el.offset().left : 0;
+        var rightLine = $rightEl.find(".vjs-selectionbar-line-RS").offset().left;
+        // console.log($rightEl.style.cssText);
+        // console.log("rightline = ", $rightEl.find(".vjs-selectionbar-arrow-RS"));
         var rightVal = $rightEl.offset().left != '' ? $rightEl.offset().left : 100;
-        var right = parseFloat(rightVal) / 100;
+        var seekBarWidth = this.$el.width();
+        rightVal = ( rightLine - seekRSBarOffset ) / seekBarWidth;
+        // var right = parseFloat(rightVal) / 100;
+        // console.log(left);
+        var right = parseFloat(rightVal)
+        // console.log(right);
         seekRSBar.RightBarPosition = right - 0.00001;
         seekRSBar.LeftBarPosition = 0.00001;
 

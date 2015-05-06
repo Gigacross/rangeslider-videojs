@@ -48,8 +48,21 @@
     };
 
     videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, seekRSBar) {
+        // console.log("selectionBar", this.$el);
+        // console.log("this offset =", this.$el.offset().left);
+        // console.log("$rightEl", $rightEl);
+        // console.log("$rightEl.offset().left = ",$rightEl.offset().left);
+        var seekRSBarOffset = this.$el.offset().left != '' ? this.$el.offset().left : 0;
+        var rightLine = $rightEl.find(".vjs-selectionbar-line-RS").offset().left;
+        // console.log($rightEl.style.cssText);
+        // console.log("rightline = ", $rightEl.find(".vjs-selectionbar-arrow-RS"));
         var rightVal = $rightEl.offset().left != '' ? $rightEl.offset().left : 100;
-        var right = parseFloat(rightVal) / 100;
+        var seekBarWidth = this.$el.width();
+        rightVal = ( rightLine - seekRSBarOffset ) / seekBarWidth;
+        // var right = parseFloat(rightVal) / 100;
+        // console.log(left);
+        var right = parseFloat(rightVal)
+        // console.log(right);
         seekRSBar.RightBarPosition = right - 0.00001;
         seekRSBar.LeftBarPosition = 0.00001;
 
