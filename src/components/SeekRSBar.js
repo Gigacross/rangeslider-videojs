@@ -296,12 +296,12 @@
         // cursorPosition = event.pageX - this.offsetX;
         this.debug_handlel = rstbX;
         this.debug_handler = rstbW;
-        console.log("event.pageX = ", event.pageX);
-        console.log("rstbX = ", rstbX);
-        console.log("rstbW = ", rstbW);
-        console.log("handleW = ", handleW);
-        console.log("left is = ", Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW)));
-        // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
+        // console.log("event.pageX = ", event.pageX);
+        // console.log("rstbX = ", rstbX);
+        // console.log("rstbW = ", rstbW);
+        // console.log("handleW = ", handleW);
+        // console.log("left is = ", Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW)));
+        // // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
         left =  Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
         
@@ -309,13 +309,15 @@
     };
 
     videojs.SeekRSBar.prototype.getRSTBX = function() {
-        // console.log(this.$el.find(".vjs-selectionbar-RS"));
-        return this.$el.find(".vjs-selectionbar-RS").offset().left;
+        // console.log(this.$el);
+        // console.log(this.$el.firstElementChild);
+        // return this.$el.offset().left; // original code
+        return this.$el.children(".vjs-selectionbar-RS").offset().left;
         //return videojs.findPosition(this.el_).left;
     };
 
     videojs.SeekRSBar.prototype.getRSTBWidth = function() {
-        return this.$el.find(".vjs-selectionbar-RS").width();
+        return this.$el.children(".vjs-selectionbar-RS").width();
         // return this.$el.width();
         // return this.el_.offsetWidth;
     };
