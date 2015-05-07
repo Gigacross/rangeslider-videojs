@@ -108,6 +108,7 @@
                 isPressed = true;
             }
             else if (this.SelectionBarRight.pressed) {
+                console.log("right bar moving")
                 this.setPosition(1, left);
                 isPressed = true;
             }
@@ -304,7 +305,7 @@
         // // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
         left =  Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
-        
+            
         return left;
     };
 

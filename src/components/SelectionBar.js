@@ -79,9 +79,21 @@
     };
 
     videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl, seekRSBar) {
+        console.log("updateRightEx - seekRSBar.leftBarPosition",seekRSBar.LeftBarPosition);
+        console.log("this.$el",this.$el);
+        var seekRSBarOffset = this.$el.offset().left != '' ? this.$el.offset().left : 0;
+        var leftLine = $leftEl.children(".vjs-selectionbar-line-RS").offset().left;
+        var leftHandleBarWidth = $leftEl.children(".vjs-selectionbar-line-RS").outerWidth();
+        console.log("$leftEl", $leftEl);
         var leftVal = $leftEl.offset().left != '' ? $leftEl.offset().left : 0;
+        var seekBarWidth = this.$el.width();
 
-        var left = parseFloat(leftVal) / 100;
+        leftVal = (leftLine + leftHandleBarWidth - seekRSBarOffset) / seekBarWidth;
+
+        // var left = parseFloat(leftVal) / 100;
+        var left = parseFloat(leftVal);
+        console.log("left value = ", left);
+        console.log("right value = ", right);
         seekRSBar.LeftBarPosition = left + 0.00001;
         seekRSBar.RightBarPosition = 0.99999;
 
