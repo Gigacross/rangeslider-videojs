@@ -45,7 +45,7 @@
       var that = this;
 
       this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
-
+      this.$el.on('mouseup', function(event){ that.onMouseUp(event); })
       return this.$el;
     };
 
@@ -63,6 +63,8 @@
         event.preventDefault();
         //videojs.blockTextSelection();
         this.pressed = true;
+        console.log(this);
+        console.log(this.pressed);
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
@@ -85,18 +87,20 @@
           this.player.rangeslider.rstb.SeekRSBar.debug_pause = this.player.paused();
           this.player.rangeslider.rstb.SeekRSBar.debug_pause_flag = true;
 
-        } 
+        }
     };
 
     videojs.SelectionBarLeft.prototype.onMouseUp = function(event) {
         // videojs.off(document, "mouseup", this.onMouseUp, false);
         // videojs.off(document, "touchend", this.onMouseUp, false);
         // videojs.off(document, "touchcancel", this.onMouseUp, false);
-        videojs.removeClass(this.el_, 'active');
+        console.log("selectionBarLeft onMouseUp")
+        console.log("this.pressed = ", this.pressed)
+        // videojs.removeClass(this.el_, 'active');
         this.pressed = false;
-        if (this.rs.options.locked) {
-            this.rs.playBetween(this.rs.start,this.rs.end);
-        } 
+        // if (this.rs.options.locked) {
+        //     this.rs.playBetween(this.rs.start,this.rs.end);
+        // } 
 
 
         this.rs.box.offsetX = 0;

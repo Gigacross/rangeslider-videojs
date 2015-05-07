@@ -45,7 +45,7 @@
       var that = this;
 
       this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
-
+      this.$el.on('mouseup', function(event){that.onMouseUp(event); });
       return this.$el;
     };
 
@@ -62,6 +62,8 @@
         event.preventDefault();
         //videojs.blockTextSelection();
         this.pressed = true;
+        console.log(this);
+        console.log(this.pressed);
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
@@ -101,7 +103,9 @@
         // videojs.off(document, "mouseup", this.onMouseUp, false);
         // videojs.off(document, "touchend", this.onMouseUp, false);
         // videojs.off(document, "touchcancel", this.onMouseUp, false);
-        videojs.removeClass(this.el_, 'active');
+        console.log("selectionBarRight onMouseUp");
+        console.log("this.pressed = ", this.pressed);
+        // videojs.removeClass(this.el_, 'active');
         this.pressed = false;
         // //this.rs.box.offsetX = 0;
         //  if (this.rs.options.locked) {
