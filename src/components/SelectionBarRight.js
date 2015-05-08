@@ -67,22 +67,13 @@
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
-        // if (!this.rs.options.locked) {
         if (!this.player.rangeslider.options.locked) {
             
             // videojs.addClass(this.el_, 'active');
           
           if (event.changedTouches === undefined) {
-            // handleW = this.rs.left.el_.offsetWidth;   
             handleW = this.$el.width(); 
-            // RSTBX = videojs.findPosition(this.el_).left + (handleW / 2);
             RSTBX = this.$el.offset().left + (handleW / 2);
-            //   this.rs.box.offsetX = event.pageX  - RSTBX;
-            // } else {
-            //   box = this.el_.getBoundingClientRect();
-            //   this.rs.box.offsetX = event.changedTouches[0].pageX - box.left;
-  
-            // }
             this.player.rangeslider.rstb.SeekRSBar.offsetX = event.pageX  - RSTBX;
             } else {
               box = this.$el.getBoundingClientRect();
@@ -103,8 +94,6 @@
         // videojs.off(document, "mouseup", this.onMouseUp, false);
         // videojs.off(document, "touchend", this.onMouseUp, false);
         // videojs.off(document, "touchcancel", this.onMouseUp, false);
-        console.log("selectionBarRight onMouseUp");
-        console.log("this.pressed = ", this.pressed);
         // videojs.removeClass(this.el_, 'active');
         this.pressed = false;
         // //this.rs.box.offsetX = 0;

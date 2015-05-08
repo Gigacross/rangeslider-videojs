@@ -114,8 +114,8 @@
             }
 
             //Fix a problem with the presition in the display time
-    //        var currentTimeDisplay = this.player_.controlBar.currentTimeDisplay.content;
-    //        currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>' + vjs.formatTime(this.rs._seconds(left), this.player_.duration());
+            //var currentTimeDisplay = this.player_.controlBar.currentTimeDisplay.content;
+            //currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>' + vjs.formatTime(this.rs._seconds(left), this.player_.duration());
 
             // Trigger slider change
             if (isPressed) {
@@ -297,12 +297,7 @@
         // cursorPosition = event.pageX - this.offsetX;
         this.debug_handlel = rstbX;
         this.debug_handler = rstbW;
-        // console.log("event.pageX = ", event.pageX);
-        // console.log("rstbX = ", rstbX);
-        // console.log("rstbW = ", rstbW);
-        // console.log("handleW = ", handleW);
-        // console.log("left is = ", Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW)));
-        // // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
+        // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); // original code
         left =  Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
             
@@ -310,8 +305,6 @@
     };
 
     videojs.SeekRSBar.prototype.getRSTBX = function() {
-        // console.log(this.$el);
-        // console.log(this.$el.firstElementChild);
         // return this.$el.offset().left; // original code
         return this.$el.children(".vjs-selectionbar-RS").offset().left;
         //return videojs.findPosition(this.el_).left;
