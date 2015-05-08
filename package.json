@@ -1,6 +1,6 @@
 {
   "name": "peepable-rangeslider-videojs",
-  "version": "0.2",
+  "version": "0.1.5",
   "description": "Peepable fork of Range Slider plugin for Video.js",
   "main": "./dist/rangeslider.js",
   "scripts": {
