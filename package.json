@@ -8,25 +8,22 @@
   },
   "repository": {
     "type": "git",
-    // "url": "https://github.com/Peepable/rangeslider-videojs.git"
-    "url" : "https://github.com/Gigacross/rangeslider-videojs.git"
+    "url": "https://github.com/Peepable/rangeslider-videojs.git"
   },
   "keywords": [
     "peepable"
   ],
   "author": {
-    // "name": "peepable"
-    "name" : "gigacross"
+    "name": "peepable"
   },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Peepable/rangeslider-videojs/issues"
   },
-  // "homepage": "https://github.com/Peepable/rangeslider-videojs",
-  "homepage" : "https://github.com/Gigacross/rangeslider-videojs",
+  "homepage": "https://github.com/Peepable/rangeslider-videojs",
   "readme": "Rangeslider-videojs\n==================\n##Ranger Slider Plugin for Video JS Player\n\nrangeslider.js is a plugin for Video JS player. The aim of this plugin is to create range slider to select a region of a video in video-js.\n\n##Live-Demo\n\nThere is a demo of the range slider plugin in the next webpage:\n\nhttp://danielcebrian.com/rangeslider/demo.html\n\n##Installation\n\nAdd rangeslider.min.js and rangeslider.min.css CDN distributed file to your head tag, just after\nvideojs:\n\n```html\n<html>\n\t<head>\n\t\t<!--Latest VideoJS-->\n\t\t<link href=\"http://vjs.zencdn.net/4.1/video-js.css\" rel=\"stylesheet\">\n\t\t<script src=\"lib/video.min.js\"></script>\n\t\t<!--RangeSlider Pluging-->\n\t\t<script src=\"src/rangeslider.js\"></script>\n\t\t<link href=\"src/rangeslider.css\" rel=\"stylesheet\">\n\t</head>\n\t<body>\n\t\t...\n```\n\n##Usage\n\nLoad a video in video-js, as you can see in the [tutorial of video-js player](https://github.com/videojs/video.js/blob/master/docs/setup.md) \n\n```html\n<video id=\"vid1\" class=\"video-js vjs-default-skin\" controls preload=\"none\" width=\"640\" height=\"264\"\nposter=\"http://video-js.zencoder.com/oceans-clip.png\"\ndata-setup=''>\n\t<source src=\"http://video-js.zencoder.com/oceans-clip.mp4\" type='video/mp4' />\n\t<source src=\"http://video-js.zencoder.com/oceans-clip.webm\" type='video/webm' />\n\t<source src=\"http://video-js.zencoder.com/oceans-clip.ogv\" type='video/ogg' />\n</video>\n```\n\t\nIn addition, to load and control the plugin from Javascript must add a few lines of javascript like:\n\n```js\nvar options = {},\n\tmplayer = videojs(\"vid1\"),\n\tmplayer.rangeslider(options);\n```\n\nThe first one was to load the videojs player and the second one is to load the rangeslider plugin\nYou can specify to the plugin to be loaded with the range slider open, the panel time, etc.. with the initial options. For example:\n\nlocked = true/false;\nhidden = true/false;\npanel = true/false;\ncontrolTime = true/false;\n\n```js\nvar options = {locked:true,controlTime:false}, //This will lock the range slider and won't show the control time panel to set the position of the arrows\n\tmplayer=videojs(\"vid1\"),\n\tmplayer.rangeslider(options); \n```\n\t\n#API Methods\n\nOnce the plugin is started, we can control the range slider with the following functions:\n\n### showSlider() ###\n\nShow the Slider Bar Component\n\n```js\n\tmplayer.showSlider();\n```\n\n### hideSlider() ###\n\nHide the Slider Bar Component\n\n```js\n\tmplayer.hideSlider();\n```\n\n### showSliderPanel() ###\n\nShow the Panel above the arrow with the current position\n\n```js\n\tmplayer.showSliderPanel();\n```\n\n### hideSliderPanel() ###\n\nHide the Panel above the arrow with the current position\n\n```js\n\tmplayer.hideSliderPanel();\n```\n\n### showControlTime() ###\n\nShow the panel to edit the time for the start and end arrows\n\n```js\n\tmplayer.showControlTime();\n```\n\n### hideControlTime() ###\n\nHide the panel to edit the time for the start and end arrows\n\n```js\n\tmplayer.hideControlTime();\n```\n\n### lockSlider() ###\n\nLock the Slider bar and it will not be possible to change the arrow positions\n\n```js\n\tmplayer.lockSlider();\n```\n\n### unlockSlider() ###\n\nUnlock the Slider bar and it will be possible to change the arrow positions\n\n```js\n\tmplayer.unlockSlider();\n```\n\n### setValueSlider() ###\n\nSet a values in seconds for the position of the arrows.\n\n```js\n\tmplayer.setValueSlider(start,end);\n```\n\n### playBetween() ###\n\nThe video will be played in a selected section. It is necessary to enter the start and end second.\n\n```js\n\tmplayer.playBetween(start, end);\n```\n\n### loopBetween() ###\n\nThe video will be looped in a selected section. It is necessary to enter the start and end second.\n\n```js\n\tmplayer.loopBetween(start, end);\n```\n\n### getValueSlider() ###\n\nGet the Values of the arrows in second.\n\n```js\n\tmplayer.getValueSlider();\n```\n\n\n## EVENTS\n\n\n### loadedRangeSlider `EVENT`\n\n> Fired when the plugin has been loaded\n\n```js\n\tmplayer.on(\"loadedRangeSlider\",function() {\n\t\t//init\n\t\t...\n\t});\n```\n\n### sliderchange `EVENT`\n> Fired when the values of slider have changed\n\n```js\n\tmplayer.on(\"sliderchange\",function() {\n\t\tvar values = mplayer.getValueSlider();\n\t\t...\n\t});\n```\n",
   "readmeFilename": "README.md",
-  "_id": "peepable-rangeslider-videojs@0.2",
+  "_id": "peepable-rangeslider-videojs@0.1.3",
   "_shasum": "fc98cfd789ecaf53c95d18e6ea1e9a393bbc891f",
   "_resolved": "git+https://github.com/Peepable/rangeslider-videojs.git#9447ea33d54b144dc1d703d3ff0ec9654ca437bd",
   "_from": "peepable-rangeslider-videojs@git+https://github.com/Peepable/rangeslider-videojs.git",
