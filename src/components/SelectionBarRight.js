@@ -96,7 +96,7 @@
 
           this.player.rangeslider.rstb.SeekRSBar.debug_pause = this.player.paused();
           this.player.rangeslider.rstb.SeekRSBar.debug_pause_flag = true;
-        } 
+        }
     };
 
     videojs.SelectionBarRight.prototype.onMouseUp = function(event) {
