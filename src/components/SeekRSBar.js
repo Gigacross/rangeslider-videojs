@@ -99,7 +99,7 @@
         };
 
         videojs.SeekRSBar.prototype.onMouseMove = function(event) {
-            console.log('SeekRSBar - mousemove');
+            // console.log('SeekRSBar - mousemove');
             var left = this.calculateDistance(event);
             var isPressed = false;
 
@@ -108,7 +108,6 @@
                 isPressed = true;
             }
             else if (this.SelectionBarRight.pressed) {
-                console.log("right bar moving")
                 this.setPosition(1, left);
                 isPressed = true;
             }
@@ -119,7 +118,8 @@
 
             // Trigger slider change
             if (isPressed) {
-                //this.rs._triggerSliderChange();
+                // this.rs._triggerSliderChange();
+                // currentTime gives the timing of the handlebar but doesn't change the seekbar position.
             }
         };
 
@@ -161,6 +161,7 @@
 
             //Check if left arrow is passing the right arrow
             if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this))) {
+              
                 var TimeText = this.formatTime(this.rs._seconds(left));
                 
                 movingSelectionBar.setLocation({

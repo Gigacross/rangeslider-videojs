@@ -53,25 +53,44 @@ videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, 
     var rightLine = $rightEl.find(".vjs-selectionbar-line-RS").offset().left;
     var rightVal = $rightEl.offset().left != '' ? $rightEl.offset().left : 100;
     var seekBarWidth = this.$el.width();
+    var right;
+    
+
     rightVal = ( rightLine - seekRSBarOffset ) / seekBarWidth;
     // var right = parseFloat(rightVal) / 100;
-    var right = parseFloat(rightVal)
+    right = parseFloat(rightVal);
 
     seekRSBar.RightBarPosition = right - 0.00001;
     seekRSBar.LeftBarPosition = 0.00001;
 
-    var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    // var width = videojs.round(Math.max(0, (right - left)), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    var width = calculateWidth(left, right);
+    // console.log("left = ", left);
+    // console.log("right = ", right);
 
-    //(right+0.00001) is to fix the precision of the css in html
+    // console.log("right - left = ", width);
+    // (right+0.00001) is to fix the precision of the css in html
     if (left <= (right + 0.00001)) {
-        //seekRSBar.$el.offset().left = (left * 100) + '%';
-        seekRSBar.$el.css({ left: (left * 100) + '%' });
-        seekRSBar.$el.width((width * 100) + '%');
+        // seekRSBar.$el.offset().left = (left * 100) + '%';
+        // console.log(seekRSBar.SelectionBar.$el);
+        var leftPercent = (left * 100) + '%';
+        leftPercent = leftPercent.toString();
+        // console.log("left % = ", leftPercent);
+        var widthPercent = Math.round(width * 100)+ '%';
+        // widthPercent = widthPercent.toString();
+        // console.log("leftEx + width % = ", widthPercent);
+        // seekRSBar.SelectionBar.$el.css({ left: leftPercent });
+        seekRSBar.SelectionBar.$el.css({ left: leftPercent , width: widthPercent });
+        // seekRSBar.SelectionBar.$el.css({width : widthPercent});
+
+        // seekRSBar.SelectionBar.$el.width((width * 100) + '%');
         return true;
     }
     return false;
 };
-
+function calculateWidth(left, right) {
+    return videojs.round(Math.max(0, (right - left)), 3);
+}
 videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl, seekRSBar) {
     var seekRSBarOffset = this.$el.offset().left != '' ? this.$el.offset().left : 0;
     var leftLine = $leftEl.children(".vjs-selectionbar-line-RS").offset().left;
@@ -86,13 +105,20 @@ videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl
     seekRSBar.LeftBarPosition = left + 0.00001;
     seekRSBar.RightBarPosition = 0.99999;
 
-    var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    // var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    var width = calculateWidth(left, right);
 
     //(right+0.00001) is to fix the precision of the css in html
     if ((right + 0.00001) >= left) {
-        seekRSBar.$el.width((width * 100) + '%');
-        seekRSBar.$el.css({ left: ((right - width) * 100) + '%' });
-
+        // seekRSBar.$el.width((width * 100) + '%');
+        // seekRSBar.$el.css({ left: ((right - width) * 100) + '%' });
+        left = Math.min(0, right - width);
+        var leftPercent = (left * 100) + '%';
+        leftPercent = leftPercent.toString();
+        var widthPercent = Math.round(width * 100)+ '%';
+        widthPercent = widthPercent.toString();
+        console.log("rightEx + width % = ", widthPercent);
+        // seekRSBar.SelectionBar.$el.css({ left: leftPercent , width: widthPercent });
         return true;
     }
     return false;

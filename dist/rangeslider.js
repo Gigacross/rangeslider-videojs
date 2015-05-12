@@ -673,7 +673,7 @@ var $ = require('jquery');
         };
 
         videojs.SeekRSBar.prototype.onMouseMove = function(event) {
-            console.log('SeekRSBar - mousemove');
+            // console.log('SeekRSBar - mousemove');
             var left = this.calculateDistance(event);
             var isPressed = false;
 
@@ -682,7 +682,6 @@ var $ = require('jquery');
                 isPressed = true;
             }
             else if (this.SelectionBarRight.pressed) {
-                console.log("right bar moving")
                 this.setPosition(1, left);
                 isPressed = true;
             }
@@ -693,7 +692,8 @@ var $ = require('jquery');
 
             // Trigger slider change
             if (isPressed) {
-                //this.rs._triggerSliderChange();
+                // this.rs._triggerSliderChange();
+                // currentTime gives the timing of the handlebar but doesn't change the seekbar position.
             }
         };
 
@@ -735,6 +735,7 @@ var $ = require('jquery');
 
             //Check if left arrow is passing the right arrow
             if ((index === 0 ? bar.updateLeftEx(left, ObjLeft, ObjRight, this) : bar.updateRightEx(left, ObjLeft, ObjRight, this))) {
+              
                 var TimeText = this.formatTime(this.rs._seconds(left));
                 
                 movingSelectionBar.setLocation({
@@ -949,25 +950,44 @@ videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, 
     var rightLine = $rightEl.find(".vjs-selectionbar-line-RS").offset().left;
     var rightVal = $rightEl.offset().left != '' ? $rightEl.offset().left : 100;
     var seekBarWidth = this.$el.width();
+    var right;
+    
+
     rightVal = ( rightLine - seekRSBarOffset ) / seekBarWidth;
     // var right = parseFloat(rightVal) / 100;
-    var right = parseFloat(rightVal)
+    right = parseFloat(rightVal);
 
     seekRSBar.RightBarPosition = right - 0.00001;
     seekRSBar.LeftBarPosition = 0.00001;
 
-    var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    // var width = videojs.round(Math.max(0, (right - left)), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    var width = calculateWidth(left, right);
+    // console.log("left = ", left);
+    // console.log("right = ", right);
 
-    //(right+0.00001) is to fix the precision of the css in html
+    // console.log("right - left = ", width);
+    // (right+0.00001) is to fix the precision of the css in html
     if (left <= (right + 0.00001)) {
-        //seekRSBar.$el.offset().left = (left * 100) + '%';
-        seekRSBar.$el.css({ left: (left * 100) + '%' });
-        seekRSBar.$el.width((width * 100) + '%');
+        // seekRSBar.$el.offset().left = (left * 100) + '%';
+        // console.log(seekRSBar.SelectionBar.$el);
+        var leftPercent = (left * 100) + '%';
+        leftPercent = leftPercent.toString();
+        // console.log("left % = ", leftPercent);
+        var widthPercent = Math.round(width * 100)+ '%';
+        // widthPercent = widthPercent.toString();
+        // console.log("leftEx + width % = ", widthPercent);
+        // seekRSBar.SelectionBar.$el.css({ left: leftPercent });
+        seekRSBar.SelectionBar.$el.css({ left: leftPercent , width: widthPercent });
+        // seekRSBar.SelectionBar.$el.css({width : widthPercent});
+
+        // seekRSBar.SelectionBar.$el.width((width * 100) + '%');
         return true;
     }
     return false;
 };
-
+function calculateWidth(left, right) {
+    return videojs.round(Math.max(0, (right - left)), 3);
+}
 videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl, seekRSBar) {
     var seekRSBarOffset = this.$el.offset().left != '' ? this.$el.offset().left : 0;
     var leftLine = $leftEl.children(".vjs-selectionbar-line-RS").offset().left;
@@ -982,13 +1002,20 @@ videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl
     seekRSBar.LeftBarPosition = left + 0.00001;
     seekRSBar.RightBarPosition = 0.99999;
 
-    var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    // var width = videojs.round((right - left), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
+    var width = calculateWidth(left, right);
 
     //(right+0.00001) is to fix the precision of the css in html
     if ((right + 0.00001) >= left) {
-        seekRSBar.$el.width((width * 100) + '%');
-        seekRSBar.$el.css({ left: ((right - width) * 100) + '%' });
-
+        // seekRSBar.$el.width((width * 100) + '%');
+        // seekRSBar.$el.css({ left: ((right - width) * 100) + '%' });
+        left = Math.min(0, right - width);
+        var leftPercent = (left * 100) + '%';
+        leftPercent = leftPercent.toString();
+        var widthPercent = Math.round(width * 100)+ '%';
+        widthPercent = widthPercent.toString();
+        console.log("rightEx + width % = ", widthPercent);
+        // seekRSBar.SelectionBar.$el.css({ left: leftPercent , width: widthPercent });
         return true;
     }
     return false;
@@ -1124,8 +1151,8 @@ videojs.SelectionBar.prototype.process_loop = function() {
         event.preventDefault();
         //videojs.blockTextSelection();
         this.pressed = true;
-        console.log(this);
-        console.log(this.pressed);
+        // console.log(this);
+        // console.log(this.pressed);
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
@@ -1155,16 +1182,12 @@ videojs.SelectionBar.prototype.process_loop = function() {
         // videojs.off(document, "mouseup", this.onMouseUp, false);
         // videojs.off(document, "touchend", this.onMouseUp, false);
         // videojs.off(document, "touchcancel", this.onMouseUp, false);
-        console.log("selectionBarLeft onMouseUp")
-        console.log("this.pressed = ", this.pressed)
         // videojs.removeClass(this.el_, 'active');
-        this.pressed = false;
         // if (this.rs.options.locked) {
         //     this.rs.playBetween(this.rs.start,this.rs.end);
         // } 
-
-
-        this.rs.box.offsetX = 0;
+        // this.rs.box.offsetX = 0;
+        this.pressed = false;
     };
     /**
      * This is the right arrow to select the RangeSlider
@@ -1230,8 +1253,8 @@ videojs.SelectionBar.prototype.process_loop = function() {
         event.preventDefault();
         //videojs.blockTextSelection();
         this.pressed = true;
-        console.log(this);
-        console.log(this.pressed);
+        // console.log(this);
+        // console.log(this.pressed);
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
@@ -1263,14 +1286,12 @@ videojs.SelectionBar.prototype.process_loop = function() {
         // videojs.off(document, "touchend", this.onMouseUp, false);
         // videojs.off(document, "touchcancel", this.onMouseUp, false);
         // videojs.removeClass(this.el_, 'active');
-        this.pressed = false;
         // //this.rs.box.offsetX = 0;
         //  if (this.rs.options.locked) {
         //     this.rs.playBetween(this.rs.start,this.rs.end);
         // } 
-
-
-        this.rs.box.offsetX = 0;
+        // this.rs.box.offsetX = 0;
+        this.pressed = false;
     };
 
     /**

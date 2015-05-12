@@ -63,8 +63,8 @@
         event.preventDefault();
         //videojs.blockTextSelection();
         this.pressed = true;
-        console.log(this);
-        console.log(this.pressed);
+        // console.log(this);
+        // console.log(this.pressed);
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
@@ -94,14 +94,10 @@
         // videojs.off(document, "mouseup", this.onMouseUp, false);
         // videojs.off(document, "touchend", this.onMouseUp, false);
         // videojs.off(document, "touchcancel", this.onMouseUp, false);
-        console.log("selectionBarLeft onMouseUp")
-        console.log("this.pressed = ", this.pressed)
         // videojs.removeClass(this.el_, 'active');
-        this.pressed = false;
         // if (this.rs.options.locked) {
         //     this.rs.playBetween(this.rs.start,this.rs.end);
         // } 
-
-
-        this.rs.box.offsetX = 0;
+        // this.rs.box.offsetX = 0;
+        this.pressed = false;
     };
