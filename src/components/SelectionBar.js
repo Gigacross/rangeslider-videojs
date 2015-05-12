@@ -65,25 +65,23 @@ videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, 
 
     // var width = videojs.round(Math.max(0, (right - left)), 3); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
     var width = calculateWidth(left, right);
-    // console.log("left = ", left);
-    // console.log("right = ", right);
+    console.log("left = ", left);
+    console.log("right = ", right);
 
-    // console.log("right - left = ", width);
+    console.log("right - left = ", width);
     // (right+0.00001) is to fix the precision of the css in html
     if (left <= (right + 0.00001)) {
         // seekRSBar.$el.offset().left = (left * 100) + '%';
         // console.log(seekRSBar.SelectionBar.$el);
-        var leftPercent = (left * 100) + '%';
+        var leftPercent = Math.round(left * 100) + '%';
         leftPercent = leftPercent.toString();
-        // console.log("left % = ", leftPercent);
+        console.log("left % = ", leftPercent);
         var widthPercent = Math.round(width * 100)+ '%';
-        // widthPercent = widthPercent.toString();
-        // console.log("leftEx + width % = ", widthPercent);
-        // seekRSBar.SelectionBar.$el.css({ left: leftPercent });
-        seekRSBar.SelectionBar.$el.css({ left: leftPercent , width: widthPercent });
-        // seekRSBar.SelectionBar.$el.css({width : widthPercent});
+        widthPercent = widthPercent.toString();
+        console.log("leftExWidth % = ", widthPercent);
 
-        // seekRSBar.SelectionBar.$el.width((width * 100) + '%');
+        $(seekRSBar.SelectionBar["$el"][0]).css({left: leftPercent, width: widthPercent});
+
         return true;
     }
     return false;
@@ -113,12 +111,13 @@ videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl
         // seekRSBar.$el.width((width * 100) + '%');
         // seekRSBar.$el.css({ left: ((right - width) * 100) + '%' });
         left = Math.min(0, right - width);
-        var leftPercent = (left * 100) + '%';
+        var leftPercent = Math.round(left * 100) + '%';
         leftPercent = leftPercent.toString();
         var widthPercent = Math.round(width * 100)+ '%';
         widthPercent = widthPercent.toString();
-        console.log("rightEx + width % = ", widthPercent);
+        console.log("rightExWidth % = ", widthPercent);
         // seekRSBar.SelectionBar.$el.css({ left: leftPercent , width: widthPercent });
+        $(seekRSBar.SelectionBar["$el"][0]).css({left: leftPercent, width: widthPercent});
         return true;
     }
     return false;
