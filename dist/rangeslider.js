@@ -688,8 +688,8 @@ var $ = require('jquery');
             }
 
             //Fix a problem with the presition in the display time
-    //        var currentTimeDisplay = this.player_.controlBar.currentTimeDisplay.content;
-    //        currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>' + vjs.formatTime(this.rs._seconds(left), this.player_.duration());
+            //var currentTimeDisplay = this.player_.controlBar.currentTimeDisplay.content;
+            //currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>' + vjs.formatTime(this.rs._seconds(left), this.player_.duration());
 
             // Trigger slider change
             if (isPressed) {
@@ -871,12 +871,7 @@ var $ = require('jquery');
         // cursorPosition = event.pageX - this.offsetX;
         this.debug_handlel = rstbX;
         this.debug_handler = rstbW;
-        // console.log("event.pageX = ", event.pageX);
-        // console.log("rstbX = ", rstbX);
-        // console.log("rstbW = ", rstbW);
-        // console.log("handleW = ", handleW);
-        // console.log("left is = ", Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW)));
-        // // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); 
+        // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); // original code
         left =  Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
             
@@ -884,8 +879,6 @@ var $ = require('jquery');
     };
 
     videojs.SeekRSBar.prototype.getRSTBX = function() {
-        // console.log(this.$el);
-        // console.log(this.$el.firstElementChild);
         // return this.$el.offset().left; // original code
         return this.$el.children(".vjs-selectionbar-RS").offset().left;
         //return videojs.findPosition(this.el_).left;
@@ -951,21 +944,15 @@ videojs.SelectionBar.prototype.onMouseUp = function() {
 };
 
 videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, seekRSBar) {
-    // console.log("selectionBar", this.$el);
-    // console.log("this offset =", this.$el.offset().left);
-    // console.log("$rightEl", $rightEl);
-    // console.log("$rightEl.offset().left = ",$rightEl.offset().left);
+
     var seekRSBarOffset = this.$el.offset().left != '' ? this.$el.offset().left : 0;
     var rightLine = $rightEl.find(".vjs-selectionbar-line-RS").offset().left;
-    // console.log($rightEl.style.cssText);
-    // console.log("rightline = ", $rightEl.find(".vjs-selectionbar-arrow-RS"));
     var rightVal = $rightEl.offset().left != '' ? $rightEl.offset().left : 100;
     var seekBarWidth = this.$el.width();
     rightVal = ( rightLine - seekRSBarOffset ) / seekBarWidth;
     // var right = parseFloat(rightVal) / 100;
-    // console.log(left);
     var right = parseFloat(rightVal)
-    // console.log(right);
+
     seekRSBar.RightBarPosition = right - 0.00001;
     seekRSBar.LeftBarPosition = 0.00001;
 
@@ -982,12 +969,9 @@ videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, 
 };
 
 videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl, seekRSBar) {
-    // console.log("updateRightEx - seekRSBar.leftBarPosition",seekRSBar.LeftBarPosition);
-    // console.log("this.$el",this.$el);
     var seekRSBarOffset = this.$el.offset().left != '' ? this.$el.offset().left : 0;
     var leftLine = $leftEl.children(".vjs-selectionbar-line-RS").offset().left;
     var leftHandleBarWidth = $leftEl.children(".vjs-selectionbar-line-RS").outerWidth();
-    // console.log("$leftEl", $leftEl);
     var leftVal = $leftEl.offset().left != '' ? $leftEl.offset().left : 0;
     var seekBarWidth = this.$el.width();
 
@@ -995,8 +979,6 @@ videojs.SelectionBar.prototype.updateRightEx = function(right, $leftEl, $rightEl
 
     // var left = parseFloat(leftVal) / 100;
     var left = parseFloat(leftVal);
-    // console.log("left value = ", left);
-    // console.log("right value = ", right);
     seekRSBar.LeftBarPosition = left + 0.00001;
     seekRSBar.RightBarPosition = 0.99999;
 
@@ -1253,22 +1235,13 @@ videojs.SelectionBar.prototype.process_loop = function() {
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
-        // if (!this.rs.options.locked) {
         if (!this.player.rangeslider.options.locked) {
             
             // videojs.addClass(this.el_, 'active');
           
           if (event.changedTouches === undefined) {
-            // handleW = this.rs.left.el_.offsetWidth;   
             handleW = this.$el.width(); 
-            // RSTBX = videojs.findPosition(this.el_).left + (handleW / 2);
             RSTBX = this.$el.offset().left + (handleW / 2);
-            //   this.rs.box.offsetX = event.pageX  - RSTBX;
-            // } else {
-            //   box = this.el_.getBoundingClientRect();
-            //   this.rs.box.offsetX = event.changedTouches[0].pageX - box.left;
-  
-            // }
             this.player.rangeslider.rstb.SeekRSBar.offsetX = event.pageX  - RSTBX;
             } else {
               box = this.$el.getBoundingClientRect();
@@ -1282,15 +1255,13 @@ videojs.SelectionBar.prototype.process_loop = function() {
 
           this.player.rangeslider.rstb.SeekRSBar.debug_pause = this.player.paused();
           this.player.rangeslider.rstb.SeekRSBar.debug_pause_flag = true;
-        } 
+        }
     };
 
     videojs.SelectionBarRight.prototype.onMouseUp = function(event) {
         // videojs.off(document, "mouseup", this.onMouseUp, false);
         // videojs.off(document, "touchend", this.onMouseUp, false);
         // videojs.off(document, "touchcancel", this.onMouseUp, false);
-        console.log("selectionBarRight onMouseUp");
-        console.log("this.pressed = ", this.pressed);
         // videojs.removeClass(this.el_, 'active');
         this.pressed = false;
         // //this.rs.box.offsetX = 0;
