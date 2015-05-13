@@ -55,7 +55,7 @@
             this.$el = holder;
 
             this.$el.on('mousedown', this.down);
-            // this.$el.on('touchstart', this.down);
+            this.$el.on('touchstart', this.down);
 
             return holder;
         };
@@ -77,8 +77,8 @@
             if (!this.rs.options.locked) {
                 $(document).on("mousemove", this.move);
                 $(document).on("mouseup", this.up);
-                // $(document).on("touchmove", this.move);
-                // $(document).on("touchup", this.up);
+                $(document).on("touchmove", this.move);
+                $(document).on("touchup", this.up);
                 
                 // videojs.on(document, "touchmove", videojs.bind(this, this.onMouseMove));
                 // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
