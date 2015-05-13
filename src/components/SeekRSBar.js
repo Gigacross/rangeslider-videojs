@@ -10,8 +10,9 @@
             this.rs = rangeSlider;
 
             this.move = $.proxy(this.onMouseMove,this);
-            this.up = $.proxy(this.onMouseUp,this);
+            this.up   = $.proxy(this.onMouseUp,this);
             this.down = $.proxy(this.onMouseDown,this);
+
         };
 
         // videojs.Component.extend({
@@ -28,8 +29,6 @@
         //         this.debug_pause_flag = false;
         //         this.RightBarPosition = .9999;
         //         this.LeftBarPosition = 0.00001;
-
-                
         //     }
         // });
 
@@ -56,6 +55,7 @@
             this.$el = holder;
 
             this.$el.on('mousedown', this.down);
+            // this.$el.on('touchstart', this.down);
 
             return holder;
         };
@@ -77,10 +77,12 @@
             if (!this.rs.options.locked) {
                 $(document).on("mousemove", this.move);
                 $(document).on("mouseup", this.up);
+                // $(document).on("touchmove", this.move);
+                // $(document).on("touchup", this.up);
+                
                 // videojs.on(document, "touchmove", videojs.bind(this, this.onMouseMove));
                 // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
                 // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
-
             } //else {
             //  videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
              //   videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
@@ -113,10 +115,10 @@
             }
 
             //Fix a problem with the presition in the display time
-            //var currentTimeDisplay = this.player_.controlBar.currentTimeDisplay.content;
+            //var currentTimeDisplay  this.player_.controlBar.currentTimeDisplay.content;
             //currentTimeDisplay.innerHTML = '<span class="vjs-control-text">Current Time </span>' + vjs.formatTime(this.rs._seconds(left), this.player_.duration());
 
-            // Trigger slider change
+            // Trigger slider change=
             if (isPressed) {
                 // this.rs._triggerSliderChange();
                 // currentTime gives the timing of the handlebar but doesn't change the seekbar position.

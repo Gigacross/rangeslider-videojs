@@ -51,7 +51,6 @@
 
     videojs.SelectionBarRight.prototype.setLocation = function(locationDetails) {
       this.$el.css({ left: locationDetails.left });
-
       this.$timeText.text(locationDetails.text);
     };
 

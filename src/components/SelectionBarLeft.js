@@ -51,12 +51,11 @@
 
     videojs.SelectionBarLeft.prototype.setLocation = function(locationDetails) {
       this.$el.css({ left: locationDetails.left });
-
       this.$timeText.text(locationDetails.text);
     };
 
     videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
-      console.log('SelectionBarLeft - onMouseDown');
+      // console.log('SelectionBarLeft - onMouseDown');
       
       var RSTBX, handleW, box;
        
@@ -80,13 +79,11 @@
             } else {
               box = this.$el.getBoundingClientRect();
               this.player.rangeslider.rstb.SeekRSBar.offsetX = event.changedTouches[0].pageX - box.left;
- 
             }
           this.player.rangeslider.rstb.SeekRSBar.offsetX2 = this.player.rangeslider.rstb.SeekRSBar.offsetX;  
 
           this.player.rangeslider.rstb.SeekRSBar.debug_pause = this.player.paused();
           this.player.rangeslider.rstb.SeekRSBar.debug_pause_flag = true;
-
         }
     };
 
