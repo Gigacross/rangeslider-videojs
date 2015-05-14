@@ -12,7 +12,6 @@
             this.move = $.proxy(this.onMouseMove,this);
             this.up   = $.proxy(this.onMouseUp,this);
             this.down = $.proxy(this.onMouseDown,this);
-
         };
 
         // videojs.Component.extend({
@@ -101,15 +100,17 @@
         };
 
         videojs.SeekRSBar.prototype.onMouseMove = function(event) {
-            // console.log('SeekRSBar - mousemove');
+            console.log('SeekRSBar - mousemove');
             var left = this.calculateDistance(event);
             var isPressed = false;
 
             if (this.SelectionBarLeft.pressed) {
+                console.log("SelectionBarLeft pressed");
                 this.setPosition(0, left);
                 isPressed = true;
             }
             else if (this.SelectionBarRight.pressed) {
+                console.log("SelectionBarRight pressed");
                 this.setPosition(1, left);
                 isPressed = true;
             }
@@ -288,23 +289,34 @@
         var rstbX = this.getRSTBX();
         var rstbW = this.getRSTBWidth();
         var handleW = this.getWidth();
-        var cursorPosition;
+        var cursorPosition, pointer;
         var left;
 
         //getRSTBX videojs.findPosition(this.el_).left;
         
         // Adjusted X and Width, so handle doesn't go outside the bar
+
+
+        console.log("rstbX = ", rstbX);
+        console.log("rstbW = ", rstbW);
+        console.log("handleW = ", handleW);
+
+        event.type == "touchmove" ? pointer = event.originalEvent.touches[0].pageX : pointer = event.pageX;
+
+        console.log("pointer = ", pointer);
+
         rstbX = rstbX + (handleW / 2);
         rstbW = rstbW - handleW;
         
-        // cursorPosition = event.pageX - this.offsetX;
+        // cursorPosition = pointer - this.offsetX;
+        // console.log("offsetX = ", this.offsetX);
         this.debug_handlel = rstbX;
         this.debug_handler = rstbW;
         // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); // original code
-        left =  Math.max(0, Math.min(1, (event.pageX - rstbX) / rstbW));
+        left =  Math.max(0, Math.min(1, (pointer - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
-            
-        return left;
+        console.log(left);
+        return left; 
     };
 
     videojs.SeekRSBar.prototype.getRSTBX = function() {

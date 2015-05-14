@@ -7,7 +7,6 @@
     videojs.SelectionBarLeft = function(player, options) {
 
       this.player = player;
-
       this.options = options;
     };
 
@@ -44,8 +43,8 @@
                     .append($('<div class="vjs-selectionbar-line-RS">').append(this.$timeText));
       var that = this;
 
-      this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
-      this.$el.on('mouseup', function(event){ that.onMouseUp(event); })
+      this.$el.on('mousedown tap touchstart', function(event) { that.onMouseDown(event); });
+      this.$el.on('mouseup touchend touchcancel touchleave', function(event){ that.onMouseUp(event); })
       return this.$el;
     };
 
@@ -55,7 +54,7 @@
     };
 
     videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
-      // console.log('SelectionBarLeft - onMouseDown');
+      console.log('SelectionBarLeft - onMouseDown');
       
       var RSTBX, handleW, box;
        

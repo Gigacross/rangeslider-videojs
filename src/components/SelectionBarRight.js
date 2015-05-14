@@ -44,8 +44,8 @@
                                                     .append(this.$timeText));
       var that = this;
 
-      this.$el.on('mousedown', function(event) { that.onMouseDown(event); });
-      this.$el.on('mouseup', function(event){that.onMouseUp(event); });
+      this.$el.on('mousedown touchstart', function(event) { that.onMouseDown(event); });
+      this.$el.on('mouseup touchend touchcancel touchleave', function(event){that.onMouseUp(event); });
       return this.$el;
     };
 

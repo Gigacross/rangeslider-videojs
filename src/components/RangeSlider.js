@@ -31,7 +31,7 @@
                   plugin.hidecontrolTime(); //Hide the control time panel
                           
             }
-          
+
             //plugin._reset();
             player.trigger('loadedRangeSlider'); //Let know if the Range Slider DOM is ready
         }
