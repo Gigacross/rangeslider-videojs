@@ -627,8 +627,7 @@ var $ = require('jquery');
 
             this.$el = holder;
 
-            this.$el.on('mousedown', this.down);
-            this.$el.on('touchstart', this.down);
+            this.$el.on('mousedown touchstart', this.down);
 
             return holder;
         };
@@ -642,7 +641,7 @@ var $ = require('jquery');
         };
 
         videojs.SeekRSBar.prototype.onMouseDown = function(event) {
-            console.log('SeekRSBar - onMouseDown');
+            // console.log('SeekRSBar - onMouseDown');
             event.preventDefault();
             //NOT AVAILABLE in dist version
             //videojs.blockTextSelection();
@@ -674,17 +673,17 @@ var $ = require('jquery');
         };
 
         videojs.SeekRSBar.prototype.onMouseMove = function(event) {
-            console.log('SeekRSBar - mousemove');
+            // console.log('SeekRSBar - mousemove');
             var left = this.calculateDistance(event);
             var isPressed = false;
 
             if (this.SelectionBarLeft.pressed) {
-                console.log("SelectionBarLeft pressed");
+                // console.log("SelectionBarLeft pressed");
                 this.setPosition(0, left);
                 isPressed = true;
             }
             else if (this.SelectionBarRight.pressed) {
-                console.log("SelectionBarRight pressed");
+                // console.log("SelectionBarRight pressed");
                 this.setPosition(1, left);
                 isPressed = true;
             }
@@ -863,33 +862,24 @@ var $ = require('jquery');
         var rstbX = this.getRSTBX();
         var rstbW = this.getRSTBWidth();
         var handleW = this.getWidth();
-        var cursorPosition, pointer;
+        var cursorPosition;
         var left;
 
         //getRSTBX videojs.findPosition(this.el_).left;
-        
+
         // Adjusted X and Width, so handle doesn't go outside the bar
 
-
-        console.log("rstbX = ", rstbX);
-        console.log("rstbW = ", rstbW);
-        console.log("handleW = ", handleW);
-
-        event.type == "touchmove" ? pointer = event.originalEvent.touches[0].pageX : pointer = event.pageX;
-
-        console.log("pointer = ", pointer);
+        event.type == "touchmove" ? cursorPosition = event.originalEvent.touches[0].pageX : cursorPosition = event.pageX;
 
         rstbX = rstbX + (handleW / 2);
         rstbW = rstbW - handleW;
         
-        // cursorPosition = pointer - this.offsetX;
-        // console.log("offsetX = ", this.offsetX);
+        // cursorPosition = cursorPosition - this.offsetX;
         this.debug_handlel = rstbX;
         this.debug_handler = rstbW;
         // left = Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW)); // original code
-        left =  Math.max(0, Math.min(1, (pointer - rstbX) / rstbW));
+        left =  Math.max(0, Math.min(1, (cursorPosition - rstbX) / rstbW));
         // Percent that the click is through the adjusted area
-        console.log(left);
         return left; 
     };
 
@@ -1142,7 +1132,7 @@ videojs.SelectionBar.prototype.process_loop = function() {
                     .append($('<div class="vjs-selectionbar-line-RS">').append(this.$timeText));
       var that = this;
 
-      this.$el.on('mousedown tap touchstart', function(event) { that.onMouseDown(event); });
+      this.$el.on('mousedown touchstart', function(event) { that.onMouseDown(event); });
       this.$el.on('mouseup touchend touchcancel touchleave', function(event){ that.onMouseUp(event); })
       return this.$el;
     };
@@ -1153,15 +1143,13 @@ videojs.SelectionBar.prototype.process_loop = function() {
     };
 
     videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
-      console.log('SelectionBarLeft - onMouseDown');
+      // console.log('SelectionBarLeft - onMouseDown');
       
       var RSTBX, handleW, box;
        
         event.preventDefault();
         //videojs.blockTextSelection();
         this.pressed = true;
-        // console.log(this);
-        // console.log(this.pressed);
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
