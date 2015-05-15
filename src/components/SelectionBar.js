@@ -77,11 +77,10 @@ videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, 
         // console.log("left % = ", leftPercent);
         // var widthPercent = Math.round(width * 100)+ '%';
         // widthPercent = widthPercent.toString();
-
         // this.$el[0].style.left; // use this referece style
-
         return true;
     }
+
     return false;
 };
 function calculateWidth(left, right) {

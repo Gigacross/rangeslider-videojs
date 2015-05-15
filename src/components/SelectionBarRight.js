@@ -60,9 +60,11 @@
 
         event.preventDefault();
         //videojs.blockTextSelection();
+
+        this.player.rangeslider.rstb.SeekRSBar.SelectionBarLeft.pressed = false;
+        
         this.pressed = true;
-        // console.log(this);
-        // console.log(this.pressed);
+
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));

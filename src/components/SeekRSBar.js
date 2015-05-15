@@ -104,15 +104,15 @@
             var isPressed = false;
 
             if (this.SelectionBarLeft.pressed) {
-                // console.log("SelectionBarLeft pressed");
                 this.setPosition(0, left);
                 isPressed = true;
             }
             else if (this.SelectionBarRight.pressed) {
-                // console.log("SelectionBarRight pressed");
                 this.setPosition(1, left);
                 isPressed = true;
             }
+        
+
 
             //Fix a problem with the presition in the display time
             //var currentTimeDisplay  this.player_.controlBar.currentTimeDisplay.content;

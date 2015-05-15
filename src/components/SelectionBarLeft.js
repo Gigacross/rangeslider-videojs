@@ -53,22 +53,25 @@
       this.$timeText.text(locationDetails.text);
     };
 
-    videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
+    videojs.SelectionBarLeft.prototype.onMouseDown = function(event, seekRSBar) {
       // console.log('SelectionBarLeft - onMouseDown');
-      
+
       var RSTBX, handleW, box;
        
         event.preventDefault();
         //videojs.blockTextSelection();
+
+        this.player.rangeslider.rstb.SeekRSBar.SelectionBarRight.pressed = false;
+        
         this.pressed = true;
+        
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
         if (!this.player.rangeslider.options.locked) {
             
-           // videojs.addClass(this.el_, 'active');
-
-            // Adjusted X and Width, so handle doesn't go outside the bar         
+          // videojs.addClass(this.el_, 'active');
+          // Adjusted X and Width, so handle doesn't go outside the bar         
           if (event.changedTouches === undefined) {
             handleW = this.$el.width(); 
             RSTBX = this.$el.offset().left + (handleW / 2);
@@ -93,5 +96,6 @@
         //     this.rs.playBetween(this.rs.start,this.rs.end);
         // } 
         // this.rs.box.offsetX = 0;
+        console.log("onMouseUp fired");
         this.pressed = false;
     };

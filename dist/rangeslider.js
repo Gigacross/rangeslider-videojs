@@ -678,15 +678,15 @@ var $ = require('jquery');
             var isPressed = false;
 
             if (this.SelectionBarLeft.pressed) {
-                // console.log("SelectionBarLeft pressed");
                 this.setPosition(0, left);
                 isPressed = true;
             }
             else if (this.SelectionBarRight.pressed) {
-                // console.log("SelectionBarRight pressed");
                 this.setPosition(1, left);
                 isPressed = true;
             }
+        
+
 
             //Fix a problem with the presition in the display time
             //var currentTimeDisplay  this.player_.controlBar.currentTimeDisplay.content;
@@ -978,11 +978,10 @@ videojs.SelectionBar.prototype.updateLeftEx = function(left, $leftEl, $rightEl, 
         // console.log("left % = ", leftPercent);
         // var widthPercent = Math.round(width * 100)+ '%';
         // widthPercent = widthPercent.toString();
-
         // this.$el[0].style.left; // use this referece style
-
         return true;
     }
+
     return false;
 };
 function calculateWidth(left, right) {
@@ -1142,22 +1141,25 @@ videojs.SelectionBar.prototype.process_loop = function() {
       this.$timeText.text(locationDetails.text);
     };
 
-    videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
+    videojs.SelectionBarLeft.prototype.onMouseDown = function(event, seekRSBar) {
       // console.log('SelectionBarLeft - onMouseDown');
-      
+
       var RSTBX, handleW, box;
        
         event.preventDefault();
         //videojs.blockTextSelection();
+
+        this.player.rangeslider.rstb.SeekRSBar.SelectionBarRight.pressed = false;
+        
         this.pressed = true;
+        
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
         if (!this.player.rangeslider.options.locked) {
             
-           // videojs.addClass(this.el_, 'active');
-
-            // Adjusted X and Width, so handle doesn't go outside the bar         
+          // videojs.addClass(this.el_, 'active');
+          // Adjusted X and Width, so handle doesn't go outside the bar         
           if (event.changedTouches === undefined) {
             handleW = this.$el.width(); 
             RSTBX = this.$el.offset().left + (handleW / 2);
@@ -1182,6 +1184,7 @@ videojs.SelectionBar.prototype.process_loop = function() {
         //     this.rs.playBetween(this.rs.start,this.rs.end);
         // } 
         // this.rs.box.offsetX = 0;
+        console.log("onMouseUp fired");
         this.pressed = false;
     };
     /**
@@ -1246,9 +1249,11 @@ videojs.SelectionBar.prototype.process_loop = function() {
 
         event.preventDefault();
         //videojs.blockTextSelection();
+
+        this.player.rangeslider.rstb.SeekRSBar.SelectionBarLeft.pressed = false;
+        
         this.pressed = true;
-        // console.log(this);
-        // console.log(this.pressed);
+
         // videojs.on(document, "mouseup", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchend", videojs.bind(this, this.onMouseUp));
         // videojs.on(document, "touchcancel", videojs.bind(this, this.onMouseUp));
